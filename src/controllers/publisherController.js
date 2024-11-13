@@ -1,11 +1,11 @@
 class publisherController {
     // [GET] /offer
-    offer() {
+    offer(req, res, next) {
         return 1;
     }
 
     // [GET] /offerStatus
-    offerStatus() {
+    offerStatus(req, res, next) {
         return 1;
     }
 }

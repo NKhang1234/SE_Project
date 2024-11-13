@@ -1,21 +1,21 @@
 class userController {
     // [GET] /search
-    search() {
+    search(req, res, next) {
         return 1;
     }
 
     // [GET] /caterogy/:slug
-    viewCaterogy() {
+    viewCaterogy(req, res, next) {
         return 1;
     }
 
     // [GET] /book/:slug
-    viewBook() {
+    viewBook(req, res, next) {
         return 1;
     }
 
     // [GET] /
-    index() {
+    index(req, res, next) {
         return 1;
     }
 }

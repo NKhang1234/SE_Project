@@ -1,21 +1,21 @@
 class staffController {
     // [GET] /catalogManage
-    catalogManage() {
+    catalogManage(req, res, next) {
         return 1;
     }
 
     // [GET] /memberManage
-    memberManage() {
+    memberManage(req, res, next) {
         return 1;
     }
 
     // [GET] /stockManage
-    stockManage() {
+    stockManage(req, res, next) {
         return 1;
     }
 
     // [GET] /checkInOut
-    checkInOut() {
+    checkInOut(req, res, next) {
         return 1;
     }
 }

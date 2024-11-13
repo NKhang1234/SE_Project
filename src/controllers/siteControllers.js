@@ -1,16 +1,16 @@
 class siteController {
     // [GET] /register
-    register() {
+    register(req, res, next) {
         return 1;
     }
 
     // [GET] /account
-    account() {
+    account(req, res, next) {
         return 1;
     }
 
     // [GET] /login
-    login() {
+    login(req, res, next) {
         return 1;
     }
 }
