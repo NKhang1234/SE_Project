@@ -1,10 +1,11 @@
-require("dotenv").config();
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const handlebars = require('express-handlebars');
-const {neon} = require("@neondatabase/serverless");
-
+const { neon } = require('@neondatabase/serverless');
+const db = require('./app/Models');
+const connectDB = require('./config/sequelize');
 
 const app = express();
 const port = 3000;
@@ -14,21 +15,29 @@ const route = require('./routes/indexRouter.js');
 // Connect to DB
 const sql = neon(process.env.DATABASE_URL);
 
-app.use(express.static(path.join(__dirname,'public')));
+//connect to DB sequelize
+connectDB(db.sequelize);
 
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
 app.use(express.json());
 // HTTP logger
 // app.use(morgan("combined"));
 
 // Tempalte Engine
-app.engine('.hbs', handlebars.engine({
-  extname: '.hbs'
-}));
+app.engine(
+    '.hbs',
+    handlebars.engine({
+        extname: '.hbs',
+    })
+);
 app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname,'resources', 'views'));
+app.set('views', path.join(__dirname, 'resources', 'views'));
 
 // console.log(`Path: ${path.join(__dirname,'resources/views')}`);
 
@@ -36,5 +45,5 @@ app.set('views', path.join(__dirname,'resources', 'views'));
 route(app);
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`)
+    console.log(`App listening on port ${port}`);
 });

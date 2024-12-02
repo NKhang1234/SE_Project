@@ -21,7 +21,10 @@
         "husky": "^9.1.6",
         "lint-staged": "^15.2.10",
         "mongoose": "^8.7.1",
-        "prettier": "^3.3.3"
+        "pg": "^8.13.1",
+        "pg-hstore": "^2.3.4",
+        "prettier": "^3.3.3",
+        "sequelize": "^6.37.5"
     },
     "devDependencies": {
         "morgan": "^1.10.0",
