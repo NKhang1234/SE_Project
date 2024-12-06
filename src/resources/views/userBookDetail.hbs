@@ -1,1 +1,204 @@
-<h1>Details of book Page</h1>
+<!-- src/resources/views/userBookDetail.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <style>
+        .related-books ul {
+            display: flex;
+            flex-wrap: wrap;
+            list-style-type: none;
+            padding: 0;
+        }
+        .related-books li {
+            flex: 1 0 21%; /* Adjust the percentage to control the number of items per row */
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+        }
+        .related-books img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .related-books p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .comment {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .comment-avatar {
+            margin-right: 10px;
+        }
+
+        .comment-avatar img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-actions {
+            margin-top: 5px;
+        }
+
+        .comment-actions form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Details of Book</h1>
+    <div>
+        <img src="{{book.book_img}}" alt="{{book.book_title}}" style="max-width: 200px;">
+    </div>
+    <div>
+        <h2>{{book.book_title}}</h2>
+        <p><strong>Author:</strong> {{book.book_author}}</p>
+        <p><strong>Publisher:</strong> {{book.book_publisher}}</p>
+        <p><strong>Category:</strong> {{book.book_category}}</p>
+        <p><strong>Language:</strong> {{book.language}}</p>
+        <p><strong>Publish Date:</strong> {{book.publish_date}}</p>
+        <p><strong>Weight:</strong> {{book.book_weight}} gr</p>
+        <p><strong>Size:</strong> {{book.book_size}}</p>
+        <p><strong>Book Cover:</strong> {{book.book_cover}}</p>
+        <p><strong>Description:</strong> {{book.description}}</p>
+        <p><strong>Average Rating:</strong> {{averageRating}} / 5 ({{totalRatings}} ratings)</p>
+    </div>
+
+     {{!-- Favorites and Borrow Section --}}
+    <div class="actions">
+        {{!-- Favorites --}}
+        {{#if isFavorite}}
+        <form action="/user/remove-from-favorite" method="POST">
+            <input type="hidden" name="book_code" value="{{book.book_code}}">
+            <button type="submit">Remove from Favorites</button>
+        </form>
+        {{else}}
+            <form action="/user/add-to-favorite" method="POST">
+                <input type="hidden" name="book_code" value="{{book.book_code}}">
+                <button type="submit">Add to Favorites</button>
+            </form>
+        {{/if}}
+    
+        {{!-- Borrow --}}
+        {{#if user_id}}
+            {{#if hasBorrowed}}
+                <p>You have already borrowed this book.</p>
+            {{else}}
+                {{!-- {{#if (gt book.available_copies 0)}} --}} <!-- Hiện tại đang chưa có cách để biết xem sách còn copy nào hay không (thiếu bảng trong database)-->
+                    <form action="/user/borrow-book" method="POST">
+                        <input type="hidden" name="book_code" value="{{book.book_code}}">
+                        <button type="submit">Borrow Book</button>
+                    </form>
+                {{!-- {{else}}
+                    <p>No copies available for borrowing.</p>
+                {{/if}} --}}
+            {{/if}}
+        {{else}}
+            <p>Please <a href="/login">log in</a> to borrow this book.</p>
+        {{/if}}
+    </div>
+    
+
+    <div class="related-books">
+        <h2>Related Books</h2>
+        <ul>
+            {{#each relatedBooks}}
+                <li>
+                    <a href="/user/book/{{this.related_book_code}}">
+                        <img src="{{this.book_img}}" alt="{{this.book_title}}">
+                        <p>{{this.book_title}}</p>
+                    </a>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+
+    <div class="add-comment">
+        <h2>Add a Comment</h2>
+        <form action="/user/add-comment" method="POST">
+            <input type="hidden" name="book_code" value="{{book.book_code}}">
+            <textarea name="content" rows="4" cols="50" placeholder="Write your comment here..." required></textarea><br>
+            <button type="submit">Submit Comment</button>
+        </form>
+    </div>
+
+    <div class="rate-book">
+        <h2>Rate this Book</h2>
+        <form action="/user/rate-book" method="POST">
+            <input type="hidden" name="book_code" value="{{book.book_code}}">
+            <label for="rating_score">Rating:</label>
+            <select name="rating_score" id="rating_score" required>
+                <option value="">Select rating</option>
+                <option value="1" {{#if (eq userRating 1)}}selected{{/if}}>1 Star</option>
+                <option value="2" {{#if (eq userRating 2)}}selected{{/if}}>2 Stars</option>
+                <option value="3" {{#if (eq userRating 3)}}selected{{/if}}>3 Stars</option>
+                <option value="4" {{#if (eq userRating 4)}}selected{{/if}}>4 Stars</option>
+                <option value="5" {{#if (eq userRating 5)}}selected{{/if}}>5 Stars</option>
+            </select><br>
+            <button type="submit">Submit Rating</button>
+        </form>
+    </div>
+
+    <div class="comments">
+        <h2>Comments</h2>
+        {{#if comments.length}}
+            {{#each comments}}
+                <div class="comment">
+                    <div class="comment-avatar">
+                        <img src="{{this.user_avatar}}" alt="{{this.user_name}}'s Avatar">
+                    </div>
+                    <div class="comment-content">
+                        <p><strong>{{this.user_name}}</strong> ({{this.timestamp}})</p>
+                        <p>{{this.content}}</p>
+                        <p>Likes: {{this.number_of_like}}, Dislikes: {{this.number_of_dislike}}</p>
+                        <div class="comment-actions">
+                            <form action="/user/like-comment" method="POST" style="display:inline;">
+                                <input type="hidden" name="comment_user_id" value="{{this.comment_user_id}}">
+                                <input type="hidden" name="timestamp" value="{{this.timestamp}}">
+                                <button type="submit">Like</button>
+                            </form>
+                            <form action="/user/dislike-comment" method="POST" style="display:inline;">
+                                <input type="hidden" name="comment_user_id" value="{{this.comment_user_id}}">
+                                <input type="hidden" name="timestamp" value="{{this.timestamp}}">
+                                <button type="submit">Dislike</button>
+                            </form>
+
+                            {{#if (eq ../user_id this.comment_user_id)}}
+                                <!-- Nút Edit và Delete chỉ hiển thị cho người dùng tự mình viết bình luận -->
+                                <form action="/user/edit-comment" method="POST" style="display:inline;">
+                                    <input type="hidden" name="comment_id" value="{{this.comment_id}}">
+                                    <input type="text" name="content" value="{{this.content}}" required>
+                                    <button type="submit">Edit</button>
+                                </form>
+                                <form action="/user/delete-comment" method="POST" style="display:inline;">
+                                    <input type="hidden" name="comment_id" value="{{this.comment_id}}">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <p>No comments yet.</p>
+        {{/if}}
+    </div>
+
+
+</body>
+</html>

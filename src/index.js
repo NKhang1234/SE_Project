@@ -34,6 +34,38 @@ app.engine(
     '.hbs',
     handlebars.engine({
         extname: '.hbs',
+        helpers: {
+            eq: (a, b) => a === b,
+            gt: function(a, b, options) {
+                return (a > b) ? options.fn(this) : options.inverse(this);
+            },
+            ifCond: function(v1, operator, v2, options) {
+                switch (operator) {
+                    case '==':
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '!=':
+                        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                    case '!==':
+                        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
+            }
+        }
     })
 );
 app.set('view engine', '.hbs');
@@ -45,5 +77,5 @@ app.set('views', path.join(__dirname, 'resources', 'views'));
 route(app);
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+    console.log(`Server đang chạy tại http://localhost:${port}`);
 });
