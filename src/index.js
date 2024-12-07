@@ -5,14 +5,43 @@ const path = require('path');
 const handlebars = require('express-handlebars');
 const {neon} = require("@neondatabase/serverless");
 
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const PgSession = require('connect-pg-simple')(session);
+
+const pool = require('./config/db/index.js'); // Import the pool
+
 
 const app = express();
 const port = 3000;
 
 const route = require('./routes/indexRouter.js');
 
-// Connect to DB
+// Connect to DB with Neon (for querying)
 const sql = neon(process.env.DATABASE_URL);
+
+// Create a pg Pool for session store (this should use the pg Pool object)
+
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    store: new PgSession({
+      pool: pool,
+      tableName: 'session'
+    }),
+    secret: process.env.secret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      maxAge: 1000 * 60 * 60, // 1 hour
+    },
+  })
+);
 
 app.use(express.static(path.join(__dirname,'public')));
 
@@ -29,6 +58,7 @@ app.engine('.hbs', handlebars.engine({
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname,'resources', 'views'));
+
 
 // console.log(`Path: ${path.join(__dirname,'resources/views')}`);
 

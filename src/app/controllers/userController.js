@@ -2,7 +2,7 @@ class userController {
     
     // [GET] Path: ./user/
     index(req, res) {
-        res.render('userHomepage');
+        res.render('userHomepage',{});
     }
     // [GET] Path: ./user/search
     search(req, res) {

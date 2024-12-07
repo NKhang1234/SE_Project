@@ -4,17 +4,17 @@ class staffController {
     catalogManage(req, res) {
         res.render('staffCatalog');
     }
-    // [GET] Path: ./staff/memberManage
-    memberManage(req, res) {
-        res.render('staffMember');
+    // [GET] Path: ./staff/catalogAdd
+    catalogAdd(req, res) {
+        res.render('staffCatalogAdd');
     }
-    // [GET] Path: ./staff/stockManage
-    stockManage(req,res) {
-        res.render('staffStock');
+    // [GET] Path: ./staff/catalogUpdate
+    catalogUpdate(req,res) {
+        res.render('staffCatalogUpdate');
     }
-    // [GET] Path: ./staff/checkInOut
-    checkInOut(req,res) {
-        res.render('staffCheckInOut');
+    // [GET] Path: ./staff/offerApprove
+    offerApprove(req,res) {
+        res.render('staffOfferApprove');
     }
 }
 
