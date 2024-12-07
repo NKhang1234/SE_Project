@@ -4,6 +4,7 @@ const router = express.Router();
 const userController = require('../app/controllers/userController.js');
 
 router.get('/search', userController.search);
+router.get('/mybook', userController.mybook);
 router.get('/category/:slug', userController.viewCategory);
 router.get('/book/:slug', userController.viewBook);
 router.get('/', userController.index);

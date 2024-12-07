@@ -6,6 +6,51 @@ class userController {
     // [GET] Path: ./user/    // TODO: Thêm cách để người dùng thêm thể loại yêu thích
     async index(req, res) {
         try {
+            // 1. Truy Vấn Tất Cả Các Thể Loại Sách
+            const categories = await db.sequelize.query(
+                `SELECT 
+                    category_id, 
+                    category_name,
+                    category_img
+                FROM 
+                    category 
+                ORDER BY 
+                    category_name ASC`,
+                {
+                    type: db.Sequelize.QueryTypes.SELECT
+                }
+            );
+
+            // 2. Truy Vấn 6 Cuốn Sách Nổi Bật (Random)
+            const featuredBooks = await db.sequelize.query(
+                `SELECT 
+                    book_code, 
+                    book_title, 
+                    book_img 
+                FROM 
+                    book 
+                ORDER BY 
+                    RANDOM() 
+                LIMIT 6`,
+                {
+                    type: db.Sequelize.QueryTypes.SELECT
+                }
+            );
+
+            // 3. Render Trang Index Với Dữ Liệu
+            res.render('userHomepage', { // Đảm bảo tên template đúng
+                categories,
+                featuredBooks
+            });
+        } catch (error) {
+            console.error('Error fetching index data:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+
+    // [GET] Path: ./user/mybook
+    async mybook(req, res) {
+        try {
             const user_id = 8; // Hardcoded, sau này sẽ lấy từ session: req.session.user_id
             
             // 1. Truy Vấn Sách Đã Mượn
@@ -105,7 +150,7 @@ class userController {
                 }
             );
             
-            res.render('userHomepage', {
+            res.render('userMyBook', {
                 borrowedBooks,
                 favoriteBooks,
                 favoriteCategories,
@@ -117,7 +162,7 @@ class userController {
             console.error('Error fetching dashboard data:', error);
             res.status(500).send('Internal Server Error');
         }
-    }
+    }    
 
     // [GET] Path: ./user/search
     async search(req, res) {
