@@ -336,6 +336,9 @@ class userController {
                 }
             );
 
+            // 4. Tính tổng số bình luận
+            const totalComments = comments.length;
+
             // Kiểm tra xem người dùng đã mượn sách này chưa 
             let hasBorrowed = false;
             if (user_id) {
@@ -404,16 +407,50 @@ class userController {
                 isFavorite = favorite.length > 0;
             }
 
+            // Truy vấn số lượng đánh giá cho từng mức sao
+            const ratingCounts = await db.sequelize.query(
+                `SELECT 
+                    rating_score, COUNT(*) AS count 
+                FROM 
+                    rating 
+                WHERE 
+                    book_code = :book_code 
+                GROUP BY 
+                    rating_score 
+                ORDER BY 
+                    rating_score ASC`,
+                {
+                    replacements: { book_code },
+                    type: db.Sequelize.QueryTypes.SELECT
+                }
+            );
+
+            // Chuyển đổi kết quả thành một đối tượng dễ sử dụng trong view
+            const ratingSummary = {
+                rating1: 0,
+                rating2: 0,
+                rating3: 0,
+                rating4: 0,
+                rating5: 0
+            };
+
+            ratingCounts.forEach(r => {
+                const key = `rating${r.rating_score}`;
+                ratingSummary[key] = parseInt(r.count);
+            });
+
             // Render kết quả ra view
             res.render('userBookDetail', {
                 book: book[0],
                 relatedBooks,
                 comments,
+                totalComments,
                 averageRating: rating[0]?.average_rating ? parseFloat(rating[0].average_rating).toFixed(2) : 0,
                 totalRatings: rating[0]?.total_ratings || 0,
                 userRating,
                 isFavorite,
                 hasBorrowed,
+                ratingSummary,
                 user_id
             });
         } catch (error) {
@@ -697,13 +734,6 @@ class userController {
                     }
                 );
 
-                // Ghi log hành động cập nhật đánh giá
-                // await Logs.create({
-                //     details: `User ${user_id} updated rating for book ${book_code} to ${score}`,
-                //     timestamp: timestamp,
-                //     action: 'UPDATE_RATING',
-                //     user_id: user_id
-                // });
             } else {
                 // Nếu chưa đánh giá, thêm mới đánh giá
                 await db.sequelize.query(
@@ -715,13 +745,6 @@ class userController {
                     }
                 );
 
-                // Ghi log hành động thêm đánh giá
-                // await Logs.create({
-                //     details: `User ${user_id} rated book ${book_code} with score ${score}`,
-                //     timestamp: timestamp,
-                //     action: 'ADD_RATING',
-                //     user_id: user_id
-                // });
             }
 
             res.redirect('back');
@@ -763,6 +786,8 @@ class userController {
                     type: db.Sequelize.QueryTypes.UPDATE
                 }
             );
+
+            //res.status(200).send('Bình luận đã được chỉnh sửa thành công.');
 
             res.redirect('back');
         } catch (error) {
@@ -807,6 +832,8 @@ class userController {
                 }
             );
 
+            //res.status(200).send('Bình luận đã được xóa thành công.');
+
             res.redirect('back');
         } catch (error) {
             res.status(500).send(error.message);
@@ -847,6 +874,8 @@ class userController {
                     type: db.Sequelize.QueryTypes.INSERT
                 }
             );
+
+            //res.status(201).send('Sách đã được thêm vào danh sách yêu thích.');
 
             res.redirect('back');
         } catch (error) {
@@ -889,6 +918,8 @@ class userController {
                     type: db.Sequelize.QueryTypes.DELETE
                 }
             );
+
+            //res.status(200).send('Sách đã được xóa khỏi danh sách yêu thích.');
 
             res.redirect('back');
         } catch (error) {
@@ -979,6 +1010,8 @@ class userController {
                     type: db.Sequelize.QueryTypes.INSERT
                 }
             );
+
+            //res.status(201).send('Bạn đã mượn sách thành công.');
 
             res.redirect('back');
         } catch (error) {
