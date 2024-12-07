@@ -5,6 +5,10 @@ const publisherController = require('../app/controllers/publisherController.js')
 
 // Xem danh sach cac offer
 router.get('/offerStatus', publisherController.offerStatus);
+router.get(
+    '/offerStatus/:type/:content',
+    publisherController.offerStatusFilter
+);
 
 // them mot offer
 router.post('/add', publisherController.add);

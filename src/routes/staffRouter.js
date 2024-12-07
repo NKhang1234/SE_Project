@@ -4,8 +4,8 @@ const router = express.Router();
 const staffController = require('../app/controllers/staffController.js');
 
 router.get('/catalogManage', staffController.catalogManage);
-router.get('/memberManage', staffController.memberManage);
-router.get('/stockManage', staffController.stockManage);
-router.get('/checkInOut', staffController.checkInOut);
+router.get('/catalogAdd', staffController.catalogAdd);
+router.get('/catalogUpdate', staffController.catalogUpdate);
+router.get('/offerApprove', staffController.offerApprove);
 
 module.exports = router;
