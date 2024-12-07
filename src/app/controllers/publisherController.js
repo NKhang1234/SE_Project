@@ -5,6 +5,7 @@ class publisherController {
     // [GET] publisher/offerStatus
     async offerStatus(req, res) {
         try {
+            // publisher_id = 1;
             const offers = await db.sequelize.query(
                 `SELECT * 
                 FROM offer
@@ -21,13 +22,65 @@ class publisherController {
             res.json(offers);
         } catch (error) {
             console.error('Error saving publisher:', error);
-            res.status(500).send('Internal Server Error');
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+                error: error.message, // Chi tiết lỗi (nếu cần thiết)
+            });
+        }
+    }
+
+    // [GET] publisher/offerStatus/:type/:content
+    async offerStatusFilter(req, res) {
+        const { type, content } = req.params; // Lấy các tham số từ URL hoặc query string
+        let whereConditions = `WHERE offer.publisher_id = :publisher_id`; // Điều kiện mặc định là publisher_id
+
+        // Xử lý điều kiện lọc theo type và content
+        if (type && content) {
+            if (type === 'title') {
+                whereConditions += ` AND offer.book_title LIKE %:content%`; // Lọc theo title
+            } else if (type === 'category') {
+                whereConditions += ` AND offer.book_category LIKE %:content%`; // Lọc theo category
+            } else if (type === 'discount') {
+                whereConditions += ` AND discount.discount > :content`; // Lọc theo discount lớn hơn content
+            } else if (type === 'status') {
+                whereConditions += ` AND offer.status = :content`; // Lọc theo status
+            } else if (type === 'ISBN') {
+                whereConditions += ` AND offer.book_code LIKE %:content%`; // Lọc theo ISBN (book_code)
+            }
+        }
+
+        try {
+            const offers = await db.sequelize.query(
+                `SELECT * 
+                FROM offer
+                JOIN discount 
+                ON offer.publisher_id = discount.publisher_id 
+                AND offer.offer_id = discount.offer_id
+                ${whereConditions}`, // Thêm các điều kiện lọc vào câu truy vấn
+                {
+                    replacements: {
+                        publisher_id, // Publisher ID từ request
+                        content: content, // Dùng % để tìm kiếm theo kiểu LIKE
+                    },
+                    type: db.Sequelize.QueryTypes.SELECT, // Chỉ định kiểu truy vấn là SELECT để trả về kết quả dạng mảng
+                }
+            );
+
+            res.json(offers); // Trả về kết quả tìm được
+        } catch (error) {
+            console.error('Error fetching offers:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+                error: error.message, // Bao gồm chi tiết lỗi để debug
+            });
         }
     }
 
     // [GET] publisher/add
     async getAddPage(req, res) {
-        res.render('addPage');
+        res.send('addPage');
     }
 
     // [POST] publisher/add
@@ -118,10 +171,14 @@ class publisherController {
                     type: db.Sequelize.QueryTypes.SELECT, // Chỉ định kiểu truy vấn là SELECT để trả về kết quả dạng mảng
                 }
             );
-            res.json(offers);
+            res.json(offers[0]);
         } catch (error) {
             console.error('Error saving publisher:', error);
-            res.status(500).send('Internal Server Error');
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+                error: error.message, // Chi tiết lỗi (nếu cần thiết)
+            });
         }
     }
     // [PUT] publisher/edit
@@ -213,7 +270,11 @@ class publisherController {
             res.status(200).send('Chỉnh sửa sách và giảm giá thành công');
         } catch (error) {
             console.error('Error updating offer:', error);
-            res.status(500).send('Internal Server Error');
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+                error: error.message, // Chi tiết lỗi (nếu cần thiết)
+            });
             // req.flash('error', 'Lỗi khi sửa sách. Vui lòng thử lại.');
             // res.redirect('/publisher/offerStatus');
         }
