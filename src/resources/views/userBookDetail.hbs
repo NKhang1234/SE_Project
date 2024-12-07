@@ -181,12 +181,12 @@
                             {{#if (eq ../user_id this.comment_user_id)}}
                                 <!-- Nút Edit và Delete chỉ hiển thị cho người dùng tự mình viết bình luận -->
                                 <form action="/user/edit-comment" method="POST" style="display:inline;">
-                                    <input type="hidden" name="comment_id" value="{{this.comment_id}}">
+                                    <input type="hidden" name="timestamp" value="{{this.timestamp}}">
                                     <input type="text" name="content" value="{{this.content}}" required>
                                     <button type="submit">Edit</button>
                                 </form>
                                 <form action="/user/delete-comment" method="POST" style="display:inline;">
-                                    <input type="hidden" name="comment_id" value="{{this.comment_id}}">
+                                    <input type="hidden" name="timestamp" value="{{this.timestamp}}">
                                     <button type="submit">Delete</button>
                                 </form>
                             {{/if}}

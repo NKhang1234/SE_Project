@@ -74,6 +74,7 @@ class userController {
                     fc.category_id,
                     c.category_name,
                     c.category_img,
+                    c.slug,
                     AVG(r.rating_score)::NUMERIC(10, 2) AS average_rating,
                     COUNT(r.user_id) AS total_ratings
                 FROM 
@@ -87,7 +88,7 @@ class userController {
                 WHERE 
                     fc.member_id = :user_id
                 GROUP BY 
-                    fc.member_id, fc.category_id, c.category_name, c.category_img
+                    fc.member_id, fc.category_id, c.category_name, c.category_img, c.slug
                 ORDER BY 
                     c.category_name ASC`,
                 {

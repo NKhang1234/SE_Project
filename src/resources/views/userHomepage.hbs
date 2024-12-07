@@ -95,12 +95,12 @@
                 {{#each favoriteCategories}}
                     <div class="col-md-3 category-card">
                         <div class="card h-100">
-                            <a href="/user/category/{{category_id}}">
+                            <a href="/user/category/{{slug}}">
                                 <img src="{{category_img}}" class="card-img-top" alt="{{category_name}}">
                             </a>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title text-center">
-                                    <a href="/user/category/{{category_id}}" class="stretched-link">{{category_name}}</a>
+                                    <a href="/user/category/{{slug}}" class="stretched-link">{{category_name}}</a>
                                 </h5>
                                 <p class="card-text mt-auto">
                                     <span class="rating">&#9733; {{average_rating}} / 5</span>
