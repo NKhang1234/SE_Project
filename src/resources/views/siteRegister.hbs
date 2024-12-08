@@ -1,1 +1,197 @@
-<h1>Register Page</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/resources/css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Title</title>
+</head>
+<body>
+    {{!-- This place is used to code header --}}
+<!-- Header -->
+<header class="bg-white shadow">
+    <div class="container mx-auto flex justify-between items-center py-3 px-4">
+    <!-- Logo và thanh tìm kiếm -->
+    <div class="flex items-center gap-4">
+        <!-- Logo -->
+        <a href="/user" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+        <!-- Thanh tìm kiếm -->
+        <div class="relative flex-1 mx-6 w-full">
+            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.293 13.707a8 8 0 111.414-1.414l4.243 4.243a1 1 0 01-1.414 1.414l-4.243-4.243zM14 8a6 6 0 11-12 0 6 6 0 0112 0z" clip-rule="evenodd" />
+                </svg>
+            </span>
+            <input 
+            type="text" 
+            placeholder="Tìm kiếm tên sách, thể loại..." 
+            class="lg:w-96 md:w-full pl-12 pr-4 py-3 text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+        </div>
+    </div>
+    <!-- Icon menu -->
+    <div class="flex items-center gap-6 text-gray-600">
+        <!-- Sách của tôi -->
+        <div class="flex flex-col items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm8 2v12H6V4h8zM8 6a1 1 0 100 2h4a1 1 0 100-2H8z" />
+        </svg>
+        <span class="text-sm">Sách của tôi</span>
+        </div>
+        <!-- Thông báo -->
+        <div class="flex flex-col items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6v5H3a1 1 0 100 2h14a1 1 0 100-2h-1V8a6 6 0 00-6-6zm-2 16a2 2 0 104 0H8z" clip-rule="evenodd" />
+        </svg>
+        <span class="text-sm">Thông báo</span>
+        </div>
+        <!-- Tài khoản -->
+        <a href="/account">
+            <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 12a6 6 0 100-12 6 6 0 000 12zm-7 8a8 8 0 1114 0H3z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm">Tài khoản</span>
+            </div>
+        </a>
+    </div>
+    </div>
+</header>
+
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white rounded-lg shadow-lg p-8 w-96">
+        <!-- Tiêu đề -->
+        <h2 class="text-2xl font-bold text-center mb-6">ĐĂNG KÍ</h2>
+        
+        <!-- Loại người dùng -->
+        <div class="mb-4">
+        <p class="font-medium text-gray-700 mb-2">Bạn là?</p>
+        <div class="flex space-x-4">
+            <label class="flex items-center space-x-2">
+            <input type="radio" name="role" value="staff" class="form-radio h-4 w-4">
+            <span>Staff</span>
+            </label>
+            <label class="flex items-center space-x-2">
+            <input type="radio" name="role" value="borrower" class="form-radio h-4 w-4">
+            <span>Người mượn sách</span>
+            </label>
+            <label class="flex items-center space-x-2">
+            <input type="radio" name="role" value="publisher" class="form-radio h-4 w-4">
+            <span>Nhà xuất bản</span>
+            </label>
+        </div>
+        </div>
+
+        <!-- Form đăng kí -->
+        <form>
+        <!-- Tên đăng nhập -->
+        <div class="mb-4">
+            <label for="username" class="block text-gray-700 font-medium mb-2">Tên đăng nhập</label>
+            <input
+            type="text"
+            id="username"
+            placeholder="Tên đăng nhập"
+            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+        </div>
+
+        <!-- Mật khẩu -->
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 font-medium mb-2">Mật khẩu</label>
+            <input
+            type="password"
+            id="password"
+            placeholder="Mật khẩu"
+            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+        </div>
+
+        <!-- Xác nhận mật khẩu -->
+        <div class="mb-6">
+            <label for="confirm-password" class="block text-gray-700 font-medium mb-2">Xác nhận mật khẩu</label>
+            <input
+            type="password"
+            id="confirm-password"
+            placeholder="Xác nhận mật khẩu"
+            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+        </div>
+
+        <!-- Điều khoản dịch vụ -->
+        <p class="text-sm text-gray-700 mb-6">
+            Khi nhấn đăng kí, bạn đã đồng ý với 
+            <a href="#" class="text-red-500 hover:underline">Điều khoản dịch vụ</a> của chúng tôi
+        </p>
+
+        <!-- Nút Đăng kí -->
+        <button
+            type="submit"
+            class="w-full bg-red-500 text-white font-semibold py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
+            Đăng kí
+        </button>
+        </form>
+    </div>
+    </div>
+
+<footer class="bg-white text-gray-800 py-8">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Company Information -->
+        <a href="/user">
+            <h2 class="text-4xl font-bold text-orange-500">BKBOOKS</h2>
+            <p>Công ti Cổ phần sách BKBooks</p>
+        </a>
+        <!-- Services Section -->
+        <div>
+            <h3 class="font-semibold">DỊCH VỤ</h3>
+            <ul class="mt-2">
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Điều khoản dịch vụ</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách bảo mật</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Giới thiệu BKBooks</a></li>
+            </ul>
+        </div>
+        <!-- Support Section -->
+        <div>
+            <h3 class="font-semibold">HỖ TRỢ</h3>
+            <ul class="mt-2">
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách mượn sách</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Đổi trả sách</a></li>
+            </ul>
+        </div>
+        <!-- Account Management Section -->
+        <div>
+            <h3 class="font-semibold">QUẢN LÝ TÀI KHOẢN</h3>
+            <ul class="mt-2">
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Lịch sử mượn sách</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Xem thông tin tài khoản</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Information Row -->
+    <div class="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="md:col-span-1"></div> <!-- Empty Column -->
+        <div class="flex items-center">
+            <p class="text-gray-600"> 
+                <i class="fa-solid fa-location-dot"></i>
+                Địa chỉ: 268 Lý Thường Kiệt, Phường 14, Quận 10, TP. HCM
+            </p>
+        </div>
+        <div class="flex items-start">
+            <p class="text-gray-600">
+                <i class="fa-solid fa-envelope"></i>
+                Email: abcdef@hcmut.edu.vn
+            </p>
+        </div>
+        <div class="flex items-start">
+            <p class="text-gray-600">
+                <i class="fa-solid fa-phone"></i>
+                Phone: 0123456789
+            </p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

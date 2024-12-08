@@ -7,5 +7,6 @@ router.get('/search', userController.search);
 router.get('/caterogy/:slug', userController.viewCaterogy);
 router.get('/book/:slug', userController.viewBook);
 router.get('/', userController.index);
+router.get('/mybook', userController.myBook);
 
 module.exports = router;
