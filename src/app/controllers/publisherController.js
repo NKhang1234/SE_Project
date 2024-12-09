@@ -9,9 +9,7 @@ class publisherController {
             const offers = await db.sequelize.query(
                 `SELECT * 
                 FROM offer
-                JOIN (SELECT publisher_id, offer_id, ARRAY_AGG(discount) AS discount
-                    FROM discount
-                    GROUP BY publisher_id, offer_id) AS discount 
+                JOIN discount 
                 ON offer.publisher_id = discount.publisher_id 
                 AND offer.offer_id = discount.offer_id
                 WHERE offer.publisher_id = ${req.session.userId}`,
@@ -132,21 +130,16 @@ class publisherController {
                 }
             );
             const offerId = offerResult[0].offer_id;
-            if (Array.isArray(discount) && discount.length > 0) {
-                for (const item of discount) {
-                    await db.sequelize.query(
-                        `INSERT INTO discount (publisher_id ,offer_id, discount)
+            {
+                await db.sequelize.query(
+                    `INSERT INTO discount (publisher_id ,offer_id, discount)
                         VAlUES (?, ?, ?)`,
-                        {
-                            replacements: [
-                                req.session.userId,
-                                offerId,
-                                item.value,
-                            ],
-                        }
-                    );
-                }
+                    {
+                        replacements: [req.session.userId, offerId, discount],
+                    }
+                );
             }
+
             // Redirect hoặc render thông báo thành công
             res.status(200).send('Thêm sách và giảm giá thành công');
             // req.flash('success', 'Thêm offer thành công!');
@@ -247,31 +240,12 @@ class publisherController {
                     .status(404)
                     .send('Offer not found or no changes made');
             }
-
-            // Xoá tất cả các discount cũ và thêm mới
             await db.sequelize.query(
-                `DELETE FROM discount WHERE offer_id = :offer_id`,
+                `UPDATE discount SET discount = :discount WHERE offer_id = :offer_id`,
                 {
-                    replacements: { offer_id: offer_id },
+                    replacements: { discount: discount, offer_id: offer_id },
                 }
             );
-
-            // Thêm các discount mới nếu có
-            if (Array.isArray(discount) && discount.length > 0) {
-                for (const item of discount) {
-                    await db.sequelize.query(
-                        `INSERT INTO discount (publisher_id ,offer_id, discount)
-                        VALUES (?, ?, ?)`,
-                        {
-                            replacements: [
-                                req.session.userId,
-                                offer_id,
-                                item.value,
-                            ],
-                        }
-                    );
-                }
-            }
 
             // Thành công
             // req.flash('success', 'Sửa offer thành công!');
