@@ -49,14 +49,22 @@ class siteController {
                   type: db.Sequelize.QueryTypes.SELECT
               }
           );
-  
-          if (user.length === 0) {
-              return res.status(404).send('User not found');
-          }
-  
-          res.render('siteAccount', {
-              user: user[0]
-          });
+          const allCategories = await db.sequelize.query(
+            `SELECT * FROM category`,
+            {
+                type: db.Sequelize.QueryTypes.SELECT
+            }
+        );
+
+
+      if (user.length === 0) {
+          return res.status(404).send('User not found');
+      }
+
+      res.render('siteAccount', {
+          user: user[0],
+          allCategories: allCategories
+      });
       } catch (error) {
           console.error('Error fetching user account:', error);
           res.status(500).send('Internal Server Error');

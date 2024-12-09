@@ -89,7 +89,7 @@
                 <!-- Book Item 1 -->
                     {{#each borrowedBooks}}
                     <div class="flex flex-col items-center">
-                        <a href="" class="no-underline flex flex-col items-center">
+                        <a href="/user/book/{{this.book_code}}" class="no-underline flex flex-col items-center">
                             <img src="{{book_img}}" alt="{{book_title}}" class="w-28 h-40 object-cover rounded-md shadow-md">
                             <p class="text-center text-m font-medium my-2">{{book_title}}</p>
                             <p class="text-gray-700"><strong>Ngày Mượn:</strong> {{borrow_date}}</p>
@@ -113,7 +113,7 @@
                 <!-- Book Item 1 -->
                     {{#each favoriteBooks}}
                     <div class="flex flex-col items-center">
-                        <a href="" class="no-underline flex flex-col items-center">
+                        <a href="/user/book/{{this.book_code}}" class="no-underline flex flex-col items-center">
                             <img src="{{book_img}}" alt="{{book_title}}" class="w-28 h-40 object-cover rounded-md shadow-md">
                             <p class="text-center text-sm font-medium mt-2">{{book_title}}</p>
                         </a>

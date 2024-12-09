@@ -73,7 +73,7 @@
         <div class="container mx-auto my-10 p-10 bg-white rounded-lg shadow-md">
     
             <div class="flex flex-col items-center mb-6">
-                <img src="{{this.avatar_image}}" alt="Avatar" class="w-24 h-24 rounded-full mb-4">
+                <img src="{{user.avatar_image}}" alt="Avatar" class="w-24 h-24 rounded-full mb-4">
                 <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Đổi ảnh đại diện</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -90,7 +90,7 @@
                 <!-- Tên đăng nhập -->
                 <div class="col-span-1 md:col-span-2">
                     <label for="username" class="block text-m font-medium text-gray-700">Tên đăng nhập:</label>
-                    <input id="username" type="text" value="{{this.username}}" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+                    <input id="username" type="text" value="{{user.username}}" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
                 </div>
                 <!-- Mật khẩu -->
                 <div class="col-span-1 md:col-span-2 flex items-center">
@@ -114,7 +114,7 @@
                 <div class="col-span-1 md:col-span-2 flex items-center">
                     <div class="w-full">
                         <label for="email" class="block text-m font-medium text-gray-700">Email:</label>
-                        <input id="email" type="email" value="{{this.email}}" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <input id="email" type="email" value="{{user.email}}" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <button class="ml-4 bg-red-500 text-white rounded hover:bg-red-600">Đổi Email liên kết</button>
                 </div>
