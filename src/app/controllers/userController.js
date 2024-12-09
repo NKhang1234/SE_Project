@@ -11,7 +11,8 @@ class userController {
                 `SELECT 
                     category_id, 
                     category_name,
-                    category_img
+                    category_img,
+                    slug
                 FROM 
                     category 
                 ORDER BY 
@@ -484,6 +485,20 @@ class userController {
                 ratingSummary[key] = parseInt(r.count);
             });
 
+            const categories = await db.sequelize.query(
+                `SELECT 
+                    category_id, 
+                    category_name,
+                    category_img,
+                    slug 
+                FROM 
+                    category 
+                ORDER BY 
+                    category_name ASC`,
+                {
+                    type: db.Sequelize.QueryTypes.SELECT
+                }
+            );
             // Render kết quả ra view
             res.render('userBookDetail', {
                 book: book[0],
@@ -496,7 +511,8 @@ class userController {
                 isFavorite,
                 hasBorrowed,
                 ratingSummary,
-                user_id
+                user_id,
+                categories
             });
         } catch (error) {
             console.error('Error fetching book details:', error);
