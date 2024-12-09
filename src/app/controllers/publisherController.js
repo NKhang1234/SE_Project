@@ -14,7 +14,7 @@ class publisherController {
                     GROUP BY publisher_id, offer_id) AS discount 
                 ON offer.publisher_id = discount.publisher_id 
                 AND offer.offer_id = discount.offer_id
-                WHERE offer.publisher_id = ${publisher_id}`,
+                WHERE offer.publisher_id = ${req.session.userId}`,
                 {
                     type: db.Sequelize.QueryTypes.SELECT, // Chỉ định kiểu truy vấn là SELECT để trả về kết quả dạng mảng
                 }
@@ -33,6 +33,7 @@ class publisherController {
     // [GET] publisher/offerStatus/:type/:content
     async offerStatusFilter(req, res) {
         const { type, content } = req.params; // Lấy các tham số từ URL hoặc query string
+        let publisher_id = req.session.userId;
         let whereConditions = `WHERE offer.publisher_id = :publisher_id`; // Điều kiện mặc định là publisher_id
 
         // Xử lý điều kiện lọc theo type và content
@@ -114,7 +115,7 @@ class publisherController {
                 RETURNING *`,
                 {
                     replacements: {
-                        publisher_id: publisher_id || 4,
+                        publisher_id: req.session.userId || 4,
                         book_img: book_img || null, // If no image, set to null
                         book_code: book_code || null, // If no book code, set to null
                         book_title: book_title,
@@ -137,7 +138,11 @@ class publisherController {
                         `INSERT INTO discount (publisher_id ,offer_id, discount)
                         VAlUES (?, ?, ?)`,
                         {
-                            replacements: [offerId, publisher_id, item.value],
+                            replacements: [
+                                req.session.userId,
+                                offerId,
+                                item.value,
+                            ],
                         }
                     );
                 }
@@ -166,7 +171,7 @@ class publisherController {
                     GROUP BY publisher_id, offer_id) AS discount 
                 ON offer.publisher_id = discount.publisher_id 
                 AND offer.offer_id = discount.offer_id
-                WHERE offer.publisher_id = ${publisher_id} AND offer.offer_id = ${id}`,
+                WHERE offer.publisher_id = ${req.session.userId} AND offer.offer_id = ${id}`,
                 {
                     type: db.Sequelize.QueryTypes.SELECT, // Chỉ định kiểu truy vấn là SELECT để trả về kết quả dạng mảng
                 }
@@ -219,7 +224,7 @@ class publisherController {
                 WHERE offer_id = :offer_id AND publisher_id = :publisher_id`,
                 {
                     replacements: {
-                        publisher_id: publisher_id || 4, // Chỉnh sửa theo publisher_id (giả sử bạn đã có publisher_id)
+                        publisher_id: req.session.userId || 4, // Chỉnh sửa theo publisher_id (giả sử bạn đã có publisher_id)
                         offer_id: offer_id, // Dùng offer_id từ request body để cập nhật đúng bản ghi
                         book_img: book_img || null,
                         book_code: book_code || null,
@@ -258,7 +263,11 @@ class publisherController {
                         `INSERT INTO discount (publisher_id ,offer_id, discount)
                         VALUES (?, ?, ?)`,
                         {
-                            replacements: [publisher_id, offer_id, item.value],
+                            replacements: [
+                                req.session.userId,
+                                offer_id,
+                                item.value,
+                            ],
                         }
                     );
                 }
