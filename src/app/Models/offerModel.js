@@ -4,43 +4,51 @@ module.exports = (sequelize) => {
     const Offer = sequelize.define(
         'Offer',
         {
-            Book_img: {
-                type: DataTypes.STRING,
+            publisher_id: {
+                type: DataTypes.INTEGER,
+                allownull: false,
+                primaryKey: true,
             },
-            Book_code: {
-                type: DataTypes.STRING,
+            offer_id: {
+                type: DataTypes.INTEGER,
+                allownull: false,
+                primaryKey: true,
             },
-            Book_title: {
+            book_img: {
+                type: DataTypes.INTEGER,
+            },
+            book_code: {
+                type: DataTypes.INTEGER,
+            },
+            book_title: {
                 type: DataTypes.STRING,
                 allownull: false,
             },
-            Book_author: {
+            book_author: {
                 type: DataTypes.STRING,
             },
-            Book_category: {
+            book_category: {
                 type: DataTypes.STRING,
             },
-            Language: {
+            language: {
                 type: DataTypes.STRING,
             },
-            Book_publisher: {
-                type: DataTypes.STRING,
+            publish_date: {
+                type: DataTypes.DATE,
             },
-            Public_data: {
-                type: DataTypes.TIME,
+            base_price: {
+                type: DataTypes.FLOAT,
             },
-            Base_price: {
+            number_of_discount: {
                 type: DataTypes.INTEGER,
             },
-            Number_of_discount: {
-                type: DataTypes.INTEGER,
-            },
-            Discount: {
-                type: DataTypes.INTEGER,
+            status: {
+                type: DataTypes.STRING,
             },
         },
         {
-            tableName: 'Offer',
+            tableName: 'offer',
+            timestamps: false,
         }
     );
     return Offer;
