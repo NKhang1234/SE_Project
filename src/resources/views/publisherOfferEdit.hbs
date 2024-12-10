@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -119,23 +119,24 @@
 
       <!-- Breadcrumb -->
       <nav class="container mx-auto px-4 py-2 text-lg text-gray-600">
-        <a href="#" class="text-blue-600">Đăng ký mới /</a>
+        <a href="/publisher/add" class="text-blue-600">Đăng ký mới /</a>
+        Chỉnh sửa tiêu đề sách
       </nav>
 
       <!-- Main Content -->
-
-      <form
+      {{!-- <form
         id="publisherBookForm"
-        action="/publisher/add"
+        action="/publisher/edit"
         method="POST"
         class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8"
         enctype="multipart/form-data"
       >
+        <input type="hidden" name="_method" value="PUT" />
         <!-- Left Section -->
         <div class="lg:w-2/5 bg-white rounded-lg shadow p-4">
           <!-- Book Cover Image Preview -->
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/af47a066ba5d464e1fded7c8e6e63cba340dac6015298b052a363204904058b0?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+            src="../img/{{book_img}}"
             alt="Book Cover"
             id="book-upload-image"
             class="w-full mb-4 rounded-lg shadow"
@@ -165,18 +166,9 @@
           class="lg:w-3/5 bg-white rounded-lg shadow p-6 text-xl font-bold text-black"
         >
           <h2 class="text-2xl font-bold mb-4 text-gray-700">
-            Thêm sách
+            Chỉnh sửa tiêu đề sách
           </h2>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="hidden">
-              <label class="block text-gray-700 font-medium">Mã người dùng:</label>
-              <input
-                type="text"
-                id="publisher_id"
-                name="publisher_id"
-                class="mt-1 p-2 w-full border rounded-lg"
-              />
-            </div>
             <div>
               <label class="block text-gray-700 font-medium">Tiêu đề sách:</label>
               <input
@@ -184,6 +176,7 @@
                 id="bookTitle"
                 name="book_title"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_title}}"
               />
             </div>
             <div>
@@ -193,6 +186,17 @@
                 id="bookISBN"
                 name="book_code"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_code}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Mã đơn hàng:</label>
+              <input
+                type="number"
+                id="offerID"
+                name="offer_id"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value={{offer_id}}
               />
             </div>
             <div>
@@ -202,6 +206,7 @@
                 id="bookAuthor"
                 name="book_author"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_author}}"
               />
             </div>
             <div>
@@ -211,6 +216,7 @@
                 id="bookType"
                 name="book_category"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_category}}"
               />
             </div>
             <div>
@@ -220,6 +226,7 @@
                 id="bookLanguage"
                 name="language"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{language}}"
               />
             </div>
             <div>
@@ -229,6 +236,7 @@
                 id="bookDatePublish"
                 name="publish_date"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{publish_date}}"
               />
             </div>
             <div>
@@ -238,6 +246,7 @@
                 id="bookOriginalCost"
                 name="base_price"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{base_price}}"
               />
             </div>
             <div>
@@ -247,6 +256,7 @@
                 id="bookNumberOfDiscount"
                 name="number_of_discount"
                 class="mt-1 p-2 w-full border rounded-lg"
+                value="{{number_of_discount}}"
               />
             </div>
             <div>
@@ -256,7 +266,7 @@
                 id="bookEventDiscount"
                 name="discount"
                 class="mt-1 p-2 w-full border rounded-lg"
-              ></textarea>
+              >{{discount}}</textarea>
             </div>
             <!-- Submit Button -->
             <div class="col-span-2 flex justify-end">
@@ -270,7 +280,155 @@
 
           </div>
         </div>
+      </form> --}}
+      <form
+        id="publisherBookForm"
+        action="/publisher/edit"
+        method="POST"
+        class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8"
+        enctype="multipart/form-data"
+      >
+        <input type="hidden" name="_method" value="PUT" />
+        <input type="hidden" name="offer_id" value="{{offer_id}}" />
+
+        <!-- Left Section -->
+        <div class="lg:w-2/5 bg-white rounded-lg shadow p-4">
+          <!-- Book Cover Image Preview -->
+          <img
+            src="{{#if book_img}}/img/{{book_img}}{{else}}https://cdn.builder.io/api/v1/image/assets/TEMP/af47a066ba5d464e1fded7c8e6e63cba340dac6015298b052a363204904058b0?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac{{/if}}"
+            alt="Book cover"
+            id="book-upload-image"
+            class="w-full mb-4 rounded-lg shadow"
+          />
+          <!-- Upload Button -->
+          <div class="flex justify-center items-center">
+            <label
+              for="book-image-upload"
+              class="bg-red-600 text-white py-2 px-4 rounded-lg w-full text-center cursor-pointer hover:bg-red-700"
+            >
+              Tải hình ảnh lên
+            </label>
+            <input
+              id="book-image-upload"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              name="book_img"
+              onchange="previewBookImage(event)"
+            />
+          </div>
+        </div>
+
+        <!-- Right Section -->
+        <div
+          class="lg:w-3/5 bg-white rounded-lg shadow p-6 text-xl font-bold text-black"
+        >
+          <h2 class="text-2xl font-bold mb-4 text-gray-700">
+            Chỉnh sửa tiêu đề sách
+          </h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-gray-700 font-medium">Tiêu đề sách:</label>
+              <input
+                type="text"
+                id="bookTitle"
+                name="book_title"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_title}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">ISBN:</label>
+              <input
+                type="text"
+                id="bookISBN"
+                name="book_code"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_code}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Tác giả:</label>
+              <input
+                type="text"
+                id="bookAuthor"
+                name="book_author"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_author}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Thể loại:</label>
+              <input
+                type="text"
+                id="bookType"
+                name="book_category"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_category}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Ngôn ngữ:</label>
+              <input
+                type="text"
+                id="bookLanguage"
+                name="language"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{language}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Ngày xuất bản:</label>
+              <input
+                type="date"
+                id="bookDatePublish"
+                name="publish_date"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{publish_date}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Giá gốc (VND):</label>
+              <input
+                type="text"
+                id="bookOriginalCost"
+                name="base_price"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{base_price}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Số lượng ưu đãi:</label>
+              <input
+                type="text"
+                id="bookNumberOfDiscount"
+                name="number_of_discount"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{number_of_discount}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Ưu đãi:</label>
+              <textarea
+                rows="3"
+                id="bookEventDiscount"
+                name="discount"
+                class="mt-1 p-2 w-full border rounded-lg"
+              >{{discount}}</textarea>
+            </div>
+            <!-- Submit Button -->
+            <div class="col-span-2 flex justify-end">
+              <button
+                type="submit"
+                class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              >
+                Gửi
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
+
     </main>
 
     <footer class="bg-white py-8 px-8">
