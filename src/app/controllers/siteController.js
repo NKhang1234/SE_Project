@@ -240,8 +240,8 @@ class siteController {
                   type: db.Sequelize.QueryTypes.UPDATE
               }
           );
+          res.redirect('back');
 
-          res.send('Thay đổi Avatar thành công');
       } catch (error) {
           console.error('Error changing email:', error);
           res.status(500).send('Internal Server Error');
