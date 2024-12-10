@@ -13,24 +13,6 @@ class siteController {
     viewRegister(req, res) {
         res.render('siteRegister',{layout: false});
     }
-    // [GET] Path: ./account
-    async viewAccount(req, res) {
-        res.render('siteAccount',{layout: false});
-        /* try {
-            const result = await sql`SELECT * FROM test`;
-            
-            // Check if the result is not empty and send the first row
-            if (result && result.length > 0) {
-              res.json(result[0]);  // Send the first record as JSON response
-            } else {
-              res.status(404).json({ message: 'No data found' }); // If no records found
-            }
-          } catch (error) {
-            // Handle potential errors in database query
-            console.error("Error fetching account data:", error);
-            res.status(500).json({ message: 'Internal Server Error' });
-        } */
-    }
 
     async register(req, res) {
       const { username, role, password } = req.body;
@@ -62,6 +44,8 @@ class siteController {
           req.session.userId = user.user_id;
           req.session.userName = user.username;
           req.session.userRole= user.role;
+          console.log(req.session.userId);
+
           if(user.role === 'User') {
             res.redirect('/user');
           } else if(user.role === 'Publisher') {
@@ -99,7 +83,7 @@ class siteController {
     // [GET] Path: ./account
     async account(req, res) {
       try {
-          const user_id = 8; // Lấy user_id từ session:  req.session.user_id
+          const user_id = req.session.userId; // Lấy user_id từ session:  req.session.userId
           if (!user_id) {
               return res.redirect('/login'); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
           }
@@ -111,7 +95,7 @@ class siteController {
                JOIN member m ON ua.user_id = m.member_id
                WHERE ua.user_id = :user_id`,
               {
-                  replacements: { user_id },
+                  replacements: { user_id: user_id },
                   type: db.Sequelize.QueryTypes.SELECT
               }
           );
@@ -140,7 +124,7 @@ class siteController {
     // [POST] Path: ./update-password
     async changePassword(req, res) {
       try {
-          const user_id = 8;
+          const user_id = req.session.userId;
           if (!user_id) {
               return res.redirect('/login');
           }
@@ -156,7 +140,7 @@ class siteController {
           const user = await db.sequelize.query(
               `SELECT hashed_password FROM user_account WHERE user_id = :user_id`,
               {
-                  replacements: { user_id },
+                  replacements: { user_id: user_id },
                   type: db.Sequelize.QueryTypes.SELECT
               }
           );
@@ -193,7 +177,7 @@ class siteController {
   // [POST] Path: ./change-email
   async changeEmail(req, res) {
       try {
-          const user_id = 8;
+          const user_id = req.session.userId;
           if (!user_id) {
               return res.redirect('/login');
           }
@@ -225,7 +209,7 @@ class siteController {
   // [POST] Path: ./change-avatar
   async changeAvatar(req, res) {
       try {
-          const user_id = 8;
+          const user_id = req.session.userId;
           if (!user_id) {
               return res.redirect('/login');
           }

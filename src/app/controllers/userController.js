@@ -50,9 +50,11 @@ class userController {
     }
 
     // [GET] Path: ./user/mybook
-    async mybook(req, res) {
+    async myBook(req, res) {
+        console.log("sdfsdfsdfsdfsdfsdf", req.session.userId);
         try {
-            const user_id = 8; // Hardcoded, sau này sẽ lấy từ session: req.session.user_id
+            const user_id = req.session.userId; 
+            console.log("sdfsdfsdfsdfsdfsdf", user_id);
             
             // 1. Truy Vấn Sách Đã Mượn
             const borrowedBooks = await db.sequelize.query(
@@ -80,7 +82,7 @@ class userController {
                 ORDER BY 
                     bb.borrow_date DESC`,
                 {
-                    replacements: { user_id },
+                    replacements: { user_id: user_id },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -108,7 +110,7 @@ class userController {
                 GROUP BY 
                     b.book_code, c.category_name, fb.book_code`,
                 {
-                    replacements: { user_id },
+                    replacements: { user_id: user_id },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -138,7 +140,7 @@ class userController {
                 ORDER BY 
                     c.category_name ASC`,
                 {
-                    replacements: { user_id },
+                    replacements: { user_id: user_id },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -160,7 +162,7 @@ class userController {
             });
     
         } catch (error) {
-            console.error('Error fetching dashboard data:', error);
+            console.log('Error fetching dashboard data:', error);
             res.status(500).send('Internal Server Error');
         }
     }    
@@ -241,7 +243,7 @@ class userController {
     async viewCategory(req, res) {
         try {
             const category_slug = req.params.slug; // Lấy slug của category từ URL
-            const user_id = 8; // Lấy từ session, nếu không có thì null
+            const user_id = req.session.userId; // Lấy từ session, nếu không có thì null
 
             // Truy vấn thông tin chi tiết của category dựa vào slug
             const category = await db.sequelize.query(
@@ -311,7 +313,7 @@ class userController {
     async viewBook(req, res) {
         try {
             const book_code = req.params.slug; // Lấy mã sách từ URL
-            const user_id = 8; // đang hardcode, sau này sẽ lấy từ session
+            const user_id = req.session.userId; // đang hardcode, sau này sẽ lấy từ session
 
             // Truy vấn thông tin chi tiết của sách
             const book = await db.sequelize.query(
@@ -393,7 +395,7 @@ class userController {
                      WHERE member_id = :user_id 
                      AND book_code = :book_code `,
                     {
-                        replacements: { user_id, book_code },
+                        replacements: { user_id: user_id, book_code },
                         type: db.Sequelize.QueryTypes.SELECT
                     }
                 );
@@ -425,7 +427,7 @@ class userController {
                     WHERE user_id = :user_id 
                     AND book_code = :book_code`,
                     {
-                        replacements: { user_id, book_code },
+                        replacements: { user_id: user_id, book_code },
                         type: db.Sequelize.QueryTypes.SELECT
                     }
                 );
@@ -446,7 +448,7 @@ class userController {
                     AND 
                         book_code = :book_code`,
                     {
-                        replacements: { user_id, book_code },
+                        replacements: { user_id: user_id, book_code },
                         type: db.Sequelize.QueryTypes.SELECT
                     }
                 );
@@ -523,7 +525,7 @@ class userController {
     // [POST] Path: ./user/like-comment
     async likeComment(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { comment_user_id, timestamp } = req.body;
 
             if (!user_id || !comment_user_id || !timestamp) {
@@ -539,7 +541,7 @@ class userController {
                  AND comment_user_id = :comment_user_id 
                  AND timestamp = :formattedTimestamp`,
                 {
-                    replacements: { user_id, comment_user_id, formattedTimestamp },
+                    replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -553,7 +555,7 @@ class userController {
                          AND comment_user_id = :comment_user_id 
                          AND timestamp = :formattedTimestamp`,
                         {
-                            replacements: { user_id, comment_user_id, formattedTimestamp },
+                            replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                             type: db.Sequelize.QueryTypes.DELETE
                         }
                     );
@@ -577,7 +579,7 @@ class userController {
                          AND comment_user_id = :comment_user_id 
                          AND timestamp = :formattedTimestamp`,
                         {
-                            replacements: { user_id, comment_user_id, formattedTimestamp },
+                            replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                             type: db.Sequelize.QueryTypes.UPDATE
                         }
                     );
@@ -600,7 +602,7 @@ class userController {
                     `INSERT INTO comment_reactions (user_id, comment_user_id, timestamp, reaction) 
                      VALUES (:user_id, :comment_user_id, :formattedTimestamp, 'like')`,
                     {
-                        replacements: { user_id, comment_user_id, formattedTimestamp },
+                        replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                         type: db.Sequelize.QueryTypes.INSERT
                     }
                 );
@@ -626,7 +628,7 @@ class userController {
     // [POST] Path: ./user/dislike-comment
     async dislikeComment(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { comment_user_id, timestamp } = req.body;
 
             if (!user_id || !timestamp) {
@@ -642,7 +644,7 @@ class userController {
                  AND comment_user_id = :comment_user_id 
                  AND timestamp = :formattedTimestamp`,
                 {
-                    replacements: { user_id, comment_user_id, formattedTimestamp },
+                    replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -656,7 +658,7 @@ class userController {
                          AND comment_user_id = :comment_user_id 
                          AND timestamp = :formattedTimestamp`,
                         {
-                            replacements: { user_id, comment_user_id, formattedTimestamp },
+                            replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                             type: db.Sequelize.QueryTypes.DELETE
                         }
                     );
@@ -680,7 +682,7 @@ class userController {
                          AND comment_user_id = :comment_user_id 
                          AND timestamp = :formattedTimestamp`,
                         {
-                            replacements: { user_id, comment_user_id, formattedTimestamp },
+                            replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                             type: db.Sequelize.QueryTypes.UPDATE
                         }
                     );
@@ -703,7 +705,7 @@ class userController {
                     `INSERT INTO comment_reactions (user_id, comment_user_id, timestamp, reaction) 
                      VALUES (:user_id, :comment_user_id, :formattedTimestamp, 'dislike')`,
                     {
-                        replacements: { user_id, comment_user_id, formattedTimestamp },
+                        replacements: { user_id: user_id, comment_user_id, formattedTimestamp },
                         type: db.Sequelize.QueryTypes.INSERT
                     }
                 );
@@ -729,7 +731,7 @@ class userController {
     // [POST] Path: ./user/add-comment
     async addComment(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { book_code, content } = req.body;
 
             if (!user_id || !book_code || !content) {
@@ -743,7 +745,7 @@ class userController {
                 `INSERT INTO comment (user_id, timestamp, content, number_of_like, number_of_dislike, book_code) 
                  VALUES (:user_id, :timestamp, :content, 0, 0, :book_code)`,
                 {
-                    replacements: { user_id, timestamp, content, book_code },
+                    replacements: { user_id: user_id, timestamp, content, book_code },
                     type: db.Sequelize.QueryTypes.INSERT
                 }
             );
@@ -757,7 +759,7 @@ class userController {
     // [POST] Path: /user/rate-book
     async rateBook(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { book_code, rating_score } = req.body;
 
             if (!user_id || !book_code || !rating_score) {
@@ -777,7 +779,7 @@ class userController {
                 WHERE user_id = :user_id 
                 AND book_code = :book_code`,
                 {
-                    replacements: { user_id, book_code },
+                    replacements: { user_id: user_id, book_code },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -801,7 +803,7 @@ class userController {
                     `INSERT INTO rating (user_id, timestamp, rating_score, book_code) 
                     VALUES (:user_id, :timestamp, :rating_score, :book_code)`,
                     {
-                        replacements: { user_id, timestamp, rating_score: score, book_code },
+                        replacements: { user_id: user_id, timestamp, rating_score: score, book_code },
                         type: db.Sequelize.QueryTypes.INSERT
                     }
                 );
@@ -817,7 +819,7 @@ class userController {
     // [POST] Path: /user/edit-comment
     async editComment(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const {timestamp, content } = req.body;
 
             if (!user_id || !content ) {
@@ -859,7 +861,7 @@ class userController {
     // [POST] Path: /user/delete-comment
     async deleteComment(req, res) {
         try {
-            const user_id = 8;
+            const user_id = req.session.userId;
             const { timestamp } = req.body;
 
             const formattedTimestamp = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
@@ -904,7 +906,7 @@ class userController {
     // [POST] Path: /user/add-favorite
     async addFavorite(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { book_code } = req.body;
 
             if (!user_id || !book_code) {
@@ -917,7 +919,7 @@ class userController {
                  WHERE member_id = :user_id 
                  AND book_code = :book_code`,
                 {
-                    replacements: { user_id, book_code },
+                    replacements: { user_id: user_id, book_code },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -931,7 +933,7 @@ class userController {
                 `INSERT INTO favorite_books (member_id, book_code) 
                  VALUES (:user_id, :book_code)`,
                 {
-                    replacements: { user_id, book_code },
+                    replacements: { user_id: user_id, book_code },
                     type: db.Sequelize.QueryTypes.INSERT
                 }
             );
@@ -947,7 +949,7 @@ class userController {
     // [POST] Path: /user/remove-favorite
     async removeFavorite(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { book_code } = req.body;
 
             if (!user_id || !book_code) {
@@ -960,7 +962,7 @@ class userController {
                  WHERE member_id = :user_id 
                  AND book_code = :book_code`,
                 {
-                    replacements: { user_id, book_code },
+                    replacements: { user_id: user_id, book_code },
                     type: db.Sequelize.QueryTypes.SELECT
                 }
             );
@@ -975,7 +977,7 @@ class userController {
                  WHERE member_id = :user_id 
                  AND book_code = :book_code`,
                 {
-                    replacements: { user_id, book_code },
+                    replacements: { user_id: user_id, book_code },
                     type: db.Sequelize.QueryTypes.DELETE
                 }
             );
@@ -991,7 +993,7 @@ class userController {
     // [POST] Path: ./user/borrow-book (hàm chưa hoàn thiện)
     async borrowBook(req, res) {
         try {
-            const user_id = 8; // Hard code user_id (hoặc lấy từ session nếu có)
+            const user_id = req.session.userId; // Hard code user_id (hoặc lấy từ session nếu có)
             const { book_code } = req.body;
 
             if (!user_id || !book_code) {
@@ -1024,7 +1026,7 @@ class userController {
             //      AND book_code = :book_code 
             //      AND return_date IS NULL`,
             //     {
-            //         replacements: { user_id, book_code },
+            //         replacements: { user_id: user_id, book_code },
             //         type: db.Sequelize.QueryTypes.SELECT
             //     }
             // );
@@ -1041,7 +1043,7 @@ class userController {
                 `INSERT INTO borrowing_books (member_id, book_code, borrow_date, return_date) 
                  VALUES (:user_id, :book_code, :borrow_date, :due_date)`,
                 {
-                    replacements: { user_id, book_code, borrow_date, due_date },
+                    replacements: { user_id: user_id, book_code, borrow_date, due_date },
                     type: db.Sequelize.QueryTypes.INSERT
                 }
             );
