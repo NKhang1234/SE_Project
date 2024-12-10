@@ -68,8 +68,8 @@ app.use(
 //connect to DB sequelize
 connectDB(db.sequelize);
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, '/resources')));
+console.log('Serving static files from:', path.join(__dirname, '/resources'));
 app.use(
     express.urlencoded({
         extended: true,

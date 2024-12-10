@@ -201,12 +201,10 @@ class publisherController {
             const offers = await db.sequelize.query(
                 `SELECT * 
                 FROM offer
-                JOIN (SELECT publisher_id, offer_id, ARRAY_AGG(discount) AS discount
-                    FROM discount
-                    GROUP BY publisher_id, offer_id) AS discount 
+                JOIN discount 
                 ON offer.publisher_id = discount.publisher_id 
                 AND offer.offer_id = discount.offer_id
-                WHERE offer.publisher_id = ${req.session.userId} AND offer.offer_id = ${id}`,
+                WHERE offer.publisher_id = ${req.session.userId}`,
                 {
                     type: db.Sequelize.QueryTypes.SELECT, // Chỉ định kiểu truy vấn là SELECT để trả về kết quả dạng mảng
                 }
