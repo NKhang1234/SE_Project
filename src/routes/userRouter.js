@@ -8,6 +8,7 @@ router.get('/mybook', userController.mybook);
 router.get('/category/:slug', userController.viewCategory);
 router.get('/book/:slug', userController.viewBook);
 router.get('/', userController.index);
+router.post('/borrow-book', userController.borrowBook);
 router.post('/like-comment', userController.likeComment);
 router.post('/dislike-comment', userController.dislikeComment);
 router.post('/add-comment', userController.addComment); 

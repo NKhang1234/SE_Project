@@ -116,7 +116,7 @@ class siteController {
                   type: db.Sequelize.QueryTypes.UPDATE
               }
           );
-
+          
           res.send('Thay đổi mật khẩu thành công');
       } catch (error) {
           console.error('Error changing password:', error);
@@ -148,7 +148,8 @@ class siteController {
               }
           );
 
-          res.send('Thay đổi email thành công');
+          res.redirect('back');
+          // res.send('Thay đổi email thành công');
       } catch (error) {
           console.error('Error changing email:', error);
           res.status(500).send('Internal Server Error');
@@ -190,5 +191,9 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+// Hàm hỗ trợ so sánh mật khẩu
+async function compare(password, hashedPassword) {
+  return password === hashedPassword;
+}
 
 module.exports = new siteController;
