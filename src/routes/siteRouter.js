@@ -11,6 +11,6 @@ router.get('/check-session', siteController.checkSession);
 
 router.get('/register', siteController.viewRegister);
 router.get('/account', siteController.viewAccount)
-router.get('/login', siteController.viewLogin);
+router.get('/', siteController.viewLogin);
 
 module.exports = router;

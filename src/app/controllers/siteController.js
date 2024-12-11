@@ -37,7 +37,7 @@ class siteController {
         // const hashedPassword = await bcrypt.hash(password, 10);
         const query = 'INSERT INTO user_account (username, role, hashed_password) VALUES ($1, $2, $3)';
         await pool.query(query, [username, role, password]);
-        res.redirect('/login');
+        res.redirect('/'); // login page
         //res.send('User registered');
       } catch (err) {
         console.error(err);
@@ -81,15 +81,32 @@ class siteController {
       if (err) {
           return res.status(500).send('Error logging out');
       }
-      res.send('Logged out');
+      res.redirect('/'); // login page
+      //res.send('Logged out');
       });
     }
     checkSession(req, res) {
       res.json(req.session);
     }
     // Helper function to check if a user is authenticated
-    isAuthenticated(req, res, next) {
-      if (req.session.userId) {
+    userAuthenticated(req, res, next) {
+      if (req.session.userId && req.session.userRole === 'User') {
+        return next();
+      }
+      res.status(401).send('Unauthorized');
+    }
+
+    // Helper function to check if a user is authenticated
+    publisherAuthenticated(req, res, next) {
+      if (req.session.userId && req.session.userRole === 'Publisher') {
+        return next();
+      }
+      res.status(401).send('Unauthorized');
+    }
+
+    // Helper function to check if a user is authenticated
+    staffAuthenticated(req, res, next) {
+      if (req.session.userId && req.session.userRole === 'Staff') {
         return next();
       }
       res.status(401).send('Unauthorized');
