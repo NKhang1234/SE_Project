@@ -60,7 +60,7 @@ class siteController {
         if (password === user.hashed_password) {
           req.session.userId = user.user_id;
           req.session.userName = user.username;
-          req.session.userRole= user.role;
+          req.session.userRole = user.role;
           if(user.role === 'User') {
             res.redirect('/user');
           } else if(user.role === 'Publisher') {
