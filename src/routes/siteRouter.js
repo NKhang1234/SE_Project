@@ -11,7 +11,7 @@ router.get('/check-session', siteController.checkSession);
 
 router.get('/register', siteController.viewRegister);
 router.get('/account', siteController.account);
-router.get('/login', siteController.viewLogin);
+router.get('/', siteController.viewLogin);
 router.post('/change-password', siteController.changePassword);
 router.post('/change-email', siteController.changeEmail);
 router.post('/change-avatar', siteController.changeAvatar);

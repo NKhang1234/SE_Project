@@ -115,8 +115,20 @@
         </form>
         <div class="register-section">
                 <p class="register-text">Chưa có tài khoản? Hãy đăng kí ngay!</p>
-                <button type="button" class="register-btn">Đăng kí</button>
+                <button type="button" id="registerButton" class="register-btn">Đăng kí</button>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const registerButton = document.getElementById("registerButton");
+
+        if (registerButton) {
+            registerButton.addEventListener("click", () => {
+                // Redirect to the login page
+                window.location.href = "/register"; // Adjust the URL as needed
+            });
+        }
+        });
+    </script>
 </body>
 </html>
