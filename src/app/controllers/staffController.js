@@ -10,12 +10,17 @@ class staffController {
     }
     // [GET] Path: ./staff/catalogUpdate
     catalogUpdate(req,res) {
+        const { type, content } = req.params;
         res.render('staffCatalogUpdate');
     }
     // [GET] Path: ./staff/offerApprove
     offerApprove(req,res) {
         res.render('staffOfferApprove');
     }
-}
+    // [GET] Path: ./staff/staffHome
+    staffHome(req,res) {
+        res.render('staffHome');
+    }
+}   
 
 module.exports = new staffController;

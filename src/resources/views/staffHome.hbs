@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add this link in the head of your HTML document to include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Catalogue</title>
+</head>
+<body>
+   <header class="shadow" style="background-color: #FCDDEF;">
+    <div class="container mx-auto flex justify-between items-center py-3 px-4">
+        <!-- Logo -->
+            <a href="staffHome" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+
+        <!-- Navbar -->
+        <nav class="flex items-center space-x-6">
+            <a href="catalogManage" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-book fa-2x"></i>
+                <span>Manage Catalogue</span>
+            </a>
+            <a href="offerApprove" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-check-circle fa-2x"></i>
+                <span>Approve Offer</span>
+            </a>
+            <!-- Logout Button -->
+            <button class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-user fa-2x"></i>
+                <span>Logout</span>
+            </button>
+        </nav>
+    </div>
+</header>
+
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="space-y-6">
+            <a href="catalogManage" class="block bg-blue-500 text-white font-semibold py-5 px-10 rounded-md text-center hover:bg-blue-600 text-xl shadow-lg">
+                Manage Catalogue
+            </a>
+            <a href="offerApprove" class="block bg-green-500 text-white font-semibold py-5 px-10 rounded-md text-center hover:bg-green-600 text-xl shadow-lg">
+                Approve Offer
+            </a>
+        </div>
+    </div>
+</body>
+</html>

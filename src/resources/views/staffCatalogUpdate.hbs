@@ -1,1 +1,200 @@
-<h1>Catalog Update Page</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add this link in the head of your HTML document to include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Edit Book</title>
+  </head>
+  <body>
+    <header class="shadow" style="background-color: #FCDDEF;">
+    <div class="container mx-auto flex justify-between items-center py-3 px-4">
+        <!-- Logo -->
+            <a href="staffHome" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+
+        <!-- Navbar -->
+        <nav class="flex items-center space-x-6">
+            <a href="catalogManage" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-book fa-2x"></i>
+                <span>Manage Catalogue</span>
+            </a>
+            <a href="offerApprove" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-check-circle fa-2x"></i>
+                <span>Approve Offer</span>
+            </a>
+            <!-- Logout Button -->
+            <button class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-user fa-2x"></i>
+                <span>Logout</span>
+            </button>
+        </nav>
+    </div>
+</header>
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+      <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl">
+        <h2 class="text-2xl font-bold text-center mb-6">Edit Book</h2>
+        <div id="loadingIndicator" class="text-center text-orange-500 font-bold mb-4"> Loading book, please wait... </div>
+        <form id="editBookForm">
+          <div class="mb-4">
+            <label for="title" class="block text-sm font-bold mb-2">Title</label>
+            <input type="text" id="title" name="book_title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="author" class="block text-sm font-bold mb-2">Author</label>
+            <input type="text" id="author" name="book_author" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="weight" class="block text-sm font-bold mb-2">Weight</label>
+            <input type="text" id="weight" name="book_weight" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="category_id" class="block text-sm font-bold mb-2">Category ID</label>
+            <input type="text" id="category_id" name="category_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="img" class="block text-sm font-bold mb-2">Image URL</label>
+            <input type="text" id="img" name="book_img" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="provider" class="block text-sm font-bold mb-2">Provider</label>
+            <input type="text" id="provider" name="book_provider" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="publisher" class="block text-sm font-bold mb-2">Publisher</label>
+            <input type="text" id="publisher" name="book_publisher" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="cover" class="block text-sm font-bold mb-2">Cover</label>
+            <input type="text" id="cover" name="book_cover" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="publish_date" class="block text-sm font-bold mb-2">Publish Date</label>
+            <input type="date" id="publish_date" name="publish_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="language" class="block text-sm font-bold mb-2">Language</label>
+            <input type="text" id="language" name="language" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="size" class="block text-sm font-bold mb-2">Size</label>
+            <input type="text" id="size" name="book_size" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="mb-4">
+            <label for="description" class="block text-sm font-bold mb-2">Description</label>
+            <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="4" required></textarea>
+          </div>
+          <div class="mb-6">
+            <label for="rating_score" class="block text-sm font-bold mb-2">Rating Score</label>
+            <input type="number" id="rating_score" name="rating_score" min="0" max="5" step="0.1" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          </div>
+          <div class="flex items-center justify-between">
+            <button type="submit" class="bg-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-orange-600"> Save Changes </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      async function fetchBookData(bookCode) {
+        try {
+          const response = await fetch('http://localhost:3001/api/books');
+          const books = await response.json();
+          const book = books.find(b => b.book_code == bookCode);
+          if (book) {
+            // Populate all fields with the data
+            document.getElementById('title').value = book.book_title;
+            document.getElementById('author').value = book.book_author;
+            document.getElementById('weight').value = book.book_weight;
+            document.getElementById('category_id').value = book.category_id;
+            document.getElementById('img').value = book.book_img;
+            document.getElementById('provider').value = book.book_provider;
+            document.getElementById('publisher').value = book.book_publisher;
+            document.getElementById('cover').value = book.book_cover;
+            try {
+              // Attempt to convert to Date and then to ISO string
+              let date = new Date(book.publish_date);
+              if (isNaN(date.getTime())) {
+                throw new Error("Invalid Date");
+              }
+              document.getElementById('publish_date').value = date.toISOString().split('T')[0];
+            } catch (error) {
+              // On error, set the publish_date as the raw string
+              document.getElementById('publish_date').value = book.publish_date;
+            }
+            document.getElementById('language').value = book.language;
+            document.getElementById('size').value = book.book_size;
+            document.getElementById('description').value = book.description;
+            document.getElementById('rating_score').value = book.rating_score;
+            document.getElementById('loadingIndicator').style.display = 'none';
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Book not found.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was a problem fetching the book details.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+          console.error('Error:', error);
+        }
+      }
+      document.addEventListener('DOMContentLoaded', async function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookCode = urlParams.get('book_code');
+        if (bookCode) {
+          await fetchBookData(bookCode);
+          document.getElementById('editBookForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const jsonData = Object.fromEntries(formData.entries());
+            try {
+              const response = await fetch(`http://localhost:3001/api/books/${bookCode}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+              });
+              if (response.ok) {
+                Swal.fire({
+                  title: 'Success!',
+                  text: 'Book updated successfully!',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  window.location.href = 'catalogManage';
+                });
+              } else {
+                throw new Error('Failed to update book');
+              }
+            } catch (error) {
+              Swal.fire({
+                title: 'Error!',
+                text: 'There was a problem updating the book.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            }
+          });
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: 'No book code specified.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

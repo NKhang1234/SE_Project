@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Catalogue</title>
+</head>
+<body>
+    <header class="bg-white shadow">
+        <div class="container mx-auto flex justify-between items-center py-3 px-4">
+            <a href="#" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+        </div>
+    </header>
+
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
+            <h2 class="text-2xl font-bold text-center mb-6">Book Catalogue</h2>
+            
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b">Book Code</th>
+                        <th class="py-2 px-4 border-b">Title</th>
+                        <th class="py-2 px-4 border-b">Author</th>
+                        <th class="py-2 px-4 border-b">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookList">
+                    <!-- Book rows will be appended here -->
+                </tbody>
+            </table>
+            
+            <button onclick="addBook()" class="mt-4 bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600">
+                Add Book
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Fake database
+        const books = [
+            {
+                book_code: '001',
+                category_id: 'Fiction',
+                book_img: 'url1',
+                book_title: 'The Great Gatsby',
+                book_provider: 'Provider1',
+                book_publisher: 'Publisher1',
+                book_author: 'F. Scott Fitzgerald',
+                book_cover: 'Cover1',
+                book_category: 'Fiction',
+                publish_date: '1925-04-10',
+                language: 'English',
+                book_weight: '500g',
+                book_size: '8x5 inches',
+                description: 'A novel about the American dream.',
+                rating_score: 4.5
+            },
+            // Add more books as needed
+        ];
+
+        // Render books in table
+        function renderBooks() {
+            const bookList = document.getElementById('bookList');
+            bookList.innerHTML = '';
+
+            books.forEach((book, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2 px-4 border-b">${book.book_code}</td>
+                    <td class="py-2 px-4 border-b">${book.book_title}</td>
+                    <td class="py-2 px-4 border-b">${book.book_author}</td>
+                    <td class="py-2 px-4 border-b">
+                        <button onclick="updateBook(${index})" class="mr-2 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600">Update</button>
+                        <button onclick="deleteBook(${index})" class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Delete</button>
+                    </td>
+                `;
+                bookList.appendChild(tr);
+            });
+        }
+
+        // Add book function (just a dummy function)
+        function addBook() {
+            const newBook = {
+                book_code: '002',
+                category_id: 'Non-Fiction',
+                book_img: 'url2',
+                book_title: 'New Book',
+                book_provider: 'Provider2',
+                book_publisher: 'Publisher2',
+                book_author: 'Author2',
+                book_cover: 'Cover2',
+                book_category: 'Non-Fiction',
+                publish_date: '2023-01-01',
+                language: 'English',
+                book_weight: '600g',
+                book_size: '9x6 inches',
+                description: 'A new book.',
+                rating_score: 4.0
+            };
+            books.push(newBook);
+            renderBooks();
+        }
+
+        // Delete book
+        function deleteBook(index) {
+            books.splice(index, 1);
+            renderBooks();
+        }
+
+        // Update book (just a placeholder function)
+        function updateBook(index) {
+            alert('Update feature to be implemented for book index ' + index);
+        }
+
+        // Initial render
+        renderBooks();
+    </script>
+</body>
+</html>

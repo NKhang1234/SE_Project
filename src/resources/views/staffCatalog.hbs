@@ -1,1 +1,182 @@
-<h1>Catalog Management Page - Update, add, delete books from catalog</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add this link in the head of your HTML document to include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Catalogue</title>
+</head>
+<body>
+<header class="shadow" style="background-color: #FCDDEF;">
+    <div class="container mx-auto flex justify-between items-center py-3 px-4">
+        <!-- Logo -->
+            <a href="staffHome" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+
+        <!-- Navbar -->
+        <nav class="flex items-center space-x-6">
+            <a href="catalogManage" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-book fa-2x"></i>
+                <span>Manage Catalogue</span>
+            </a>
+            <a href="offerApprove" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-check-circle fa-2x"></i>
+                <span>Approve Offer</span>
+            </a>
+            <!-- Logout Button -->
+            <button class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-user fa-2x"></i>
+                <span>Logout</span>
+            </button>
+        </nav>
+    </div>
+</header>
+
+    <div class="flex items-center justify-center min-h-screen bg-gray-100 pt-10">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
+            <h2 class="text-2xl font-bold text-center mb-6">Book Catalogue</h2>
+            
+            <div id="loading" class="text-center mb-6">Loading...</div>
+            
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b">Book Code</th>
+                        <th class="py-2 px-4 border-b">Book Image</th>
+                        
+                        <th class="py-2 px-4 border-b">Title</th>
+                        <th class="py-2 px-4 border-b">Author</th>
+                        <th class="py-2 px-4 border-b">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookList">
+                    <!-- Book rows will be appended here -->
+                </tbody>
+            </table>
+            
+            <a href="catalogAdd" class="mt-4 bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600 mt-5">
+                Add Book
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Define API root
+        const apiRoot = 'http://localhost:3001/api';
+
+        // Fetch books from API
+        async function fetchBooks() {
+            try {
+                const response = await fetch(`${apiRoot}/books`);
+                const data = await response.json();
+
+                // Full book details (for internal use)
+                const fullBooks = data.map(book => ({
+                    book_code: book.book_code,
+                    category_id: 'To Be Defined',
+                    book_img: book.book_img,
+                    book_title: book.book_title,
+                    book_provider: 'To Be Defined',
+                    book_publisher: 'To Be Defined',
+                    book_author: book.book_author,
+                    book_cover: 'To Be Defined',
+                    book_category: 'To Be Defined',
+                    publish_date: 'To Be Defined',
+                    language: 'To Be Defined',
+                    book_weight: 'To Be Defined',
+                    book_size: 'To Be Defined',
+                    description: 'To Be Defined',
+                    rating_score: 'To Be Defined'
+                }));
+fullBooks.sort((a, b) => a.book_code - b.book_code);                return fullBooks;
+            } catch (error) {
+                console.error('Error fetching books:', error);
+                return [];
+            }
+        }
+
+        // Render books in table
+        async function renderBooks() {
+            const bookList = document.getElementById('bookList');
+            const loading = document.getElementById('loading');
+
+            // Show loading indicator
+            loading.style.display = 'block';
+            bookList.innerHTML = '';
+
+            const books = await fetchBooks();
+
+            // Hide loading indicator
+            loading.style.display = 'none';
+
+            books.forEach((book, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2 px-4 border-b">${book.book_code}</td>
+                    <td class="py-2 px-4 border-b">
+                        <img src="${book.book_img}" alt="${book.book_title}" class="h-16"></td>
+                    <td class="py-2 px-4 border-b">${book.book_title}</td>
+                    <td class="py-2 px-4 border-b">${book.book_author}</td>
+                    <td class="py-2 px-4 border-b">
+                        <a href="catalogUpdate?book_code=${book.book_code}" class="mr-2 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600">Update</a>
+                        <button onclick="deleteBook(${book.book_code})" class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Delete</button>
+                    </td>
+                `;
+                bookList.appendChild(tr);
+            });
+        }
+
+        // Delete book
+        async function deleteBook(bookCode) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this book from the book catalogue?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`${apiRoot}/books/${bookCode}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'The book has been deleted.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            renderBooks(); // Refresh the book list
+                        });
+                    } else {
+                        throw new Error('Failed to delete the book');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'There was a problem deleting the book.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        }
+
+        // Update book (just a placeholder function)
+        function updateBook(index) {
+            alert('Update feature to be implemented for book index ' + index);
+        }
+
+        // Initial render
+        renderBooks();
+    </script>
+</body>
+</html>
