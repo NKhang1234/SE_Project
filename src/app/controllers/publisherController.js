@@ -1,7 +1,32 @@
+const fs = require('fs');
+const path = require('path');
+
 const db = require('../Models');
 const publisher_id = 4;
 
 class publisherController {
+    // [POST] publisher/upload
+
+    async upload(req, res) {
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        // Đổi tên file để dễ quản lý hơn (giữ nguyên định dạng file)
+        const fileExtension = path.extname(file.originalname);
+        const newFileName = `${file.filename}${fileExtension}`;
+        const newFilePath = path.join('src/resources/img', newFileName);
+
+        // Đổi tên file đã lưu tạm thành file chính thức
+        fs.renameSync(file.path, newFilePath);
+
+        res.status(200).send({
+            message: 'File uploaded successfully!',
+            fileName: newFileName,
+        });
+    }
     // [GET] publisher/offerStatus
     async offerStatus(req, res) {
         try {
@@ -9,9 +34,7 @@ class publisherController {
             const offers = await db.sequelize.query(
                 `SELECT * 
                 FROM offer
-                JOIN (SELECT publisher_id, offer_id, ARRAY_AGG(discount) AS discount
-                    FROM discount
-                    GROUP BY publisher_id, offer_id) AS discount 
+                JOIN discount 
                 ON offer.publisher_id = discount.publisher_id 
                 AND offer.offer_id = discount.offer_id
                 WHERE offer.publisher_id = ${req.session.userId}`,
@@ -87,9 +110,20 @@ class publisherController {
     // [POST] publisher/add
     async add(req, res) {
         try {
-            console.log(req.body);
+            // **1. Xử lý file ảnh**
+            const file = req.file;
+            let newFileName = null;
+            if (file) {
+                const fileExtension = path.extname(file.originalname); // Lấy đuôi file
+                newFileName = `${file.filename}${fileExtension}`; // Đặt tên file mới
+                const newFilePath = path.join('src/resources/img', newFileName);
+
+                // Đổi tên file để lưu đúng đường dẫn
+                fs.renameSync(file.path, newFilePath);
+            }
+
+            // **2. Lấy dữ liệu từ body**
             const {
-                book_img,
                 book_code,
                 book_title,
                 book_author,
@@ -101,12 +135,12 @@ class publisherController {
                 discount,
             } = req.body;
 
-            // Kiểm tra các giá trị cần thiết
+            // Kiểm tra các trường bắt buộc
             if (!book_title || !book_author) {
                 return res.status(400).send('Missing required fields');
             }
 
-            // Chèn dữ liệu vào bảng
+            // **3. Chèn dữ liệu vào bảng offer**
             const [offerResult] = await db.sequelize.query(
                 `INSERT INTO offer 
                 (publisher_id, book_img, book_code, book_title, book_author, book_category, language, publish_date, base_price, number_of_discount, status) 
@@ -116,45 +150,46 @@ class publisherController {
                 {
                     replacements: {
                         publisher_id: req.session.userId || 4,
-                        book_img: book_img || null, // If no image, set to null
-                        book_code: book_code || null, // If no book code, set to null
+                        book_img: newFileName || null, // Lưu tên file ảnh nếu có
+                        book_code: book_code || null,
                         book_title: book_title,
                         book_author: book_author,
                         book_category: book_category || null,
-                        language: language || 'Tiếng Việt', // Default language
+                        language: language || 'Tiếng Việt',
                         publish_date:
                             publish_date ||
-                            new Date().toISOString().slice(0, 10), // Default to current date
-                        base_price: base_price || 0, // Default base price
-                        number_of_discount: number_of_discount || 0, // Default discount number
-                        status: 'WAITING', // Default status
+                            new Date().toISOString().slice(0, 10),
+                        base_price: base_price || 0,
+                        number_of_discount: number_of_discount || 0,
+                        status: 'WAITING',
                     },
                 }
             );
+
             const offerId = offerResult[0].offer_id;
-            if (Array.isArray(discount) && discount.length > 0) {
-                for (const item of discount) {
-                    await db.sequelize.query(
-                        `INSERT INTO discount (publisher_id ,offer_id, discount)
-                        VAlUES (?, ?, ?)`,
-                        {
-                            replacements: [
-                                req.session.userId,
-                                offerId,
-                                item.value,
-                            ],
-                        }
-                    );
-                }
+
+            // **4. Chèn dữ liệu vào bảng discount (nếu có)**
+            if (discount) {
+                await db.sequelize.query(
+                    `INSERT INTO discount (publisher_id, offer_id, discount)
+                    VALUES (?, ?, ?)`,
+                    {
+                        replacements: [
+                            req.session.userId || 4,
+                            offerId,
+                            discount,
+                        ],
+                    }
+                );
             }
-            // Redirect hoặc render thông báo thành công
-            res.status(200).send('Thêm sách và giảm giá thành công');
-            // req.flash('success', 'Thêm offer thành công!');
-            // res.redirect('/publisher/offerStatus'); // Chuyển hướng đến trang danh sách nhà xuất bản
+
+            // **5. Phản hồi thành công**
+            res.status(200).send({
+                message: 'Thêm sách và giảm giá thành công',
+                book_img: newFileName,
+            });
         } catch (error) {
             console.error('Error saving publisher:', error);
-            // req.flash('error', 'Lỗi khi thêm sách. Vui lòng thử lại.');
-            // res.redirect('/publisher/offerStatus');
             res.status(500).send('Internal Server Error');
         }
     }
@@ -166,12 +201,10 @@ class publisherController {
             const offers = await db.sequelize.query(
                 `SELECT * 
                 FROM offer
-                JOIN (SELECT publisher_id, offer_id, ARRAY_AGG(discount) AS discount
-                    FROM discount
-                    GROUP BY publisher_id, offer_id) AS discount 
+                JOIN discount 
                 ON offer.publisher_id = discount.publisher_id 
                 AND offer.offer_id = discount.offer_id
-                WHERE offer.publisher_id = ${req.session.userId} AND offer.offer_id = ${id}`,
+                WHERE offer.publisher_id = ${req.session.userId}`,
                 {
                     type: db.Sequelize.QueryTypes.SELECT, // Chỉ định kiểu truy vấn là SELECT để trả về kết quả dạng mảng
                 }
@@ -189,10 +222,9 @@ class publisherController {
     // [PUT] publisher/edit
     async edit(req, res) {
         try {
-            console.log(req.body);
+            const file = req.file; // File upload từ request
             const {
                 offer_id,
-                book_img,
                 book_code,
                 book_title,
                 book_author,
@@ -207,6 +239,48 @@ class publisherController {
             // Kiểm tra các giá trị cần thiết
             if (!book_title || !book_author || !offer_id) {
                 return res.status(400).send('Missing required fields');
+            }
+
+            let book_img = req.body.book_img; // Đường dẫn ảnh hiện tại
+
+            // Truy vấn ảnh cũ
+            const [currentOffer] = await db.sequelize.query(
+                `SELECT book_img FROM offer WHERE offer_id = :offer_id AND publisher_id = :publisher_id`,
+                {
+                    replacements: {
+                        offer_id: offer_id,
+                        publisher_id: req.session.userId || 4,
+                    },
+                    type: db.Sequelize.QueryTypes.SELECT,
+                }
+            );
+
+            if (!currentOffer) {
+                return res.status(404).send('Offer not found');
+            }
+
+            // Đường dẫn ảnh cũ
+            const oldImagePath = path.join(
+                'src/resources/img',
+                currentOffer.book_img
+            );
+
+            // Nếu có file mới upload, xóa ảnh cũ
+            if (file) {
+                if (currentOffer.book_img && fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath); // Xóa file ảnh cũ
+                }
+
+                // Đổi tên file mới
+                const fileExtension = path.extname(file.originalname);
+                const newFileName = `${file.filename}${fileExtension}`;
+                const newFilePath = path.join('src/resources/img', newFileName);
+
+                // Đổi tên file tạm thành file chính thức
+                fs.renameSync(file.path, newFilePath);
+
+                // Lưu đường dẫn ảnh mới
+                book_img = newFileName;
             }
 
             // Cập nhật dữ liệu vào bảng offer
@@ -224,14 +298,14 @@ class publisherController {
                 WHERE offer_id = :offer_id AND publisher_id = :publisher_id`,
                 {
                     replacements: {
-                        publisher_id: req.session.userId || 4, // Chỉnh sửa theo publisher_id (giả sử bạn đã có publisher_id)
-                        offer_id: offer_id, // Dùng offer_id từ request body để cập nhật đúng bản ghi
+                        publisher_id: req.session.userId || 4,
+                        offer_id: offer_id,
                         book_img: book_img || null,
                         book_code: book_code || null,
                         book_title: book_title,
                         book_author: book_author,
                         book_category: book_category || null,
-                        language: language || 'Tiếng Việt', // Ngôn ngữ mặc định
+                        language: language || 'Tiếng Việt',
                         publish_date:
                             publish_date ||
                             new Date().toISOString().slice(0, 10),
@@ -248,44 +322,31 @@ class publisherController {
                     .send('Offer not found or no changes made');
             }
 
-            // Xoá tất cả các discount cũ và thêm mới
-            await db.sequelize.query(
-                `DELETE FROM discount WHERE offer_id = :offer_id`,
-                {
-                    replacements: { offer_id: offer_id },
-                }
-            );
-
-            // Thêm các discount mới nếu có
-            if (Array.isArray(discount) && discount.length > 0) {
-                for (const item of discount) {
-                    await db.sequelize.query(
-                        `INSERT INTO discount (publisher_id ,offer_id, discount)
-                        VALUES (?, ?, ?)`,
-                        {
-                            replacements: [
-                                req.session.userId,
-                                offer_id,
-                                item.value,
-                            ],
-                        }
-                    );
-                }
+            // Cập nhật dữ liệu bảng discount (nếu có)
+            if (discount) {
+                await db.sequelize.query(
+                    `UPDATE discount SET discount = :discount WHERE offer_id = :offer_id`,
+                    {
+                        replacements: {
+                            discount: discount,
+                            offer_id: offer_id,
+                        },
+                    }
+                );
             }
 
             // Thành công
-            // req.flash('success', 'Sửa offer thành công!');
-            // res.redirect('/publisher/offerStatus'); // Chuyển hướng đến trang danh sách nhà xuất bản
-            res.status(200).send('Chỉnh sửa sách và giảm giá thành công');
+            res.status(200).send({
+                message: 'Chỉnh sửa sách và giảm giá thành công',
+                book_img: book_img,
+            });
         } catch (error) {
             console.error('Error updating offer:', error);
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
-                error: error.message, // Chi tiết lỗi (nếu cần thiết)
+                error: error.message,
             });
-            // req.flash('error', 'Lỗi khi sửa sách. Vui lòng thử lại.');
-            // res.redirect('/publisher/offerStatus');
         }
     }
 }
