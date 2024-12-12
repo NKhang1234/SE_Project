@@ -7,5 +7,7 @@ router.get('/catalogManage', staffController.catalogManage);
 router.get('/catalogAdd', staffController.catalogAdd);
 router.get('/catalogUpdate', staffController.catalogUpdate);
 router.get('/offerApprove', staffController.offerApprove);
+router.get('/staffHome', staffController.staffHome);
+
 
 module.exports = router;
