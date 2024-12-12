@@ -41,28 +41,6 @@
           />
         </div>
 
-        <!-- Search Bar -->
-        <div class="flex items-center px-4 md:flex md:w-auto md:order-1">
-          <input
-            type="search"
-            id="searchInput"
-            class="p-3 border border-gray-300 rounded-md text-gray-700 text-lg focus:outline-none focus:ring-2 focus:ring-red-300 w-full"
-            placeholder="Tìm kiếm tên sách, thể loại hoặc từ khóa cụ thể..."
-          />
-          <button
-            type="button"
-            class="flex justify-center items-center w-12 h-12 rounded-full hover:bg-gray-100 ml-3"
-            aria-label="Voice search"
-          >
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/386207518883442a607ffd5068af0d6571abcc6654e219af2e8d84919581a2c5?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
-              alt="Voice Search"
-              class="w-6 h-6"
-            />
-          </button>
-        </div>
-
         <!-- User Options -->
         <div class="flex items-center gap-4 md:order-2">
           <!-- Notifications -->
@@ -80,18 +58,20 @@
           </button>
 
           <!-- Account -->
-          <button
-            class="px-3 py-1 rounded-xl hover:bg-gray-200 flex flex-col items-center"
-            aria-label="Account"
-          >
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/72968137062204ad157378c403ee3fc018381a90a36cda58e9b04db85b95f839"
-              alt="Tài khoản"
-              class="w-8 h-8"
-            />
-            <span class="text-sm mt-1 text-gray-700">Tài khoản</span>
-          </button>
+          <a href="/account">
+            <button
+              class="px-3 py-1 rounded-xl hover:bg-gray-200 flex flex-col items-center"
+              aria-label="Account"
+            >
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/72968137062204ad157378c403ee3fc018381a90a36cda58e9b04db85b95f839"
+                alt="Tài khoản"
+                class="w-8 h-8"
+              />
+              <span class="text-sm mt-1 text-gray-700">Tài khoản</span>
+            </button>
+          </a>
         </div>
       </div>
     </header>
@@ -124,163 +104,7 @@
       </nav>
 
       <!-- Main Content -->
-      {{!-- <form
-        id="publisherBookForm"
-        action="/publisher/edit"
-        method="POST"
-        class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8"
-        enctype="multipart/form-data"
-      >
-        <input type="hidden" name="_method" value="PUT" />
-        <!-- Left Section -->
-        <div class="lg:w-2/5 bg-white rounded-lg shadow p-4">
-          <!-- Book Cover Image Preview -->
-          <img
-            src="../img/{{book_img}}"
-            alt="Book Cover"
-            id="book-upload-image"
-            class="w-full mb-4 rounded-lg shadow"
-          />
 
-          <!-- Upload Button -->
-          <div class="flex justify-center items-center">
-            <label
-              for="book-image-upload"
-              class="bg-red-600 text-white py-2 px-4 rounded-lg w-full text-center cursor-pointer hover:bg-red-700"
-            >
-              Tải hình ảnh lên
-            </label>
-            <input
-              id="book-image-upload"
-              type="file"
-              accept="image/*"
-              class="hidden"
-              name="book_img"
-              onchange="previewBookImage(event)"
-            />
-          </div>
-        </div>
-
-        <!-- Right Section -->
-        <div
-          class="lg:w-3/5 bg-white rounded-lg shadow p-6 text-xl font-bold text-black"
-        >
-          <h2 class="text-2xl font-bold mb-4 text-gray-700">
-            Chỉnh sửa tiêu đề sách
-          </h2>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-gray-700 font-medium">Tiêu đề sách:</label>
-              <input
-                type="text"
-                id="bookTitle"
-                name="book_title"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{book_title}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">ISBN:</label>
-              <input
-                type="text"
-                id="bookISBN"
-                name="book_code"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{book_code}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Mã đơn hàng:</label>
-              <input
-                type="number"
-                id="offerID"
-                name="offer_id"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value={{offer_id}}
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Tác giả:</label>
-              <input
-                type="text"
-                id="bookAuthor"
-                name="book_author"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{book_author}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Thể loại:</label>
-              <input
-                type="text"
-                id="bookType"
-                name="book_category"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{book_category}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Ngôn ngữ:</label>
-              <input
-                type="text"
-                id="bookLanguage"
-                name="language"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{language}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Ngày xuất bản:</label>
-              <input
-                type="date"
-                id="bookDatePublish"
-                name="publish_date"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{publish_date}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Giá gốc (VND):</label>
-              <input
-                type="text"
-                id="bookOriginalCost"
-                name="base_price"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{base_price}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Số lượng ưu đãi:</label>
-              <input
-                type="text"
-                id="bookNumberOfDiscount"
-                name="number_of_discount"
-                class="mt-1 p-2 w-full border rounded-lg"
-                value="{{number_of_discount}}"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium">Ưu đãi:</label>
-              <textarea
-                rows="3"
-                id="bookEventDiscount"
-                name="discount"
-                class="mt-1 p-2 w-full border rounded-lg"
-              >{{discount}}</textarea>
-            </div>
-            <!-- Submit Button -->
-            <div class="col-span-2 flex justify-end">
-              <button
-                type="submit"
-                class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
-              >
-                Gửi
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </form> --}}
       <form
         id="publisherBookForm"
         action="/publisher/edit"
@@ -295,7 +119,7 @@
         <div class="lg:w-2/5 bg-white rounded-lg shadow p-4">
           <!-- Book Cover Image Preview -->
           <img
-            src="{{#if book_img}}/img/{{book_img}}{{else}}https://cdn.builder.io/api/v1/image/assets/TEMP/af47a066ba5d464e1fded7c8e6e63cba340dac6015298b052a363204904058b0?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac{{/if}}"
+            src="/img/{{book_img}}"
             alt="Book cover"
             id="book-upload-image"
             class="w-full mb-4 rounded-lg shadow"
@@ -431,7 +255,7 @@
 
     </main>
 
-    <footer class="bg-white py-8 px-8">
+    {{! <footer class="bg-white py-8 px-8">
       <div class="mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
         <!-- Column 1: Logo and Address -->
         <div class="border-e-4">
@@ -534,7 +358,7 @@
           </div>
         </div>
       </div>
-    </footer>
+    </footer> }}
 
     <script>
       function previewBookImage(event) { const file = event.target.files[0];

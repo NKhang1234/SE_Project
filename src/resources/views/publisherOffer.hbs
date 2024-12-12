@@ -41,28 +41,6 @@
           />
         </div>
 
-        <!-- Search Bar -->
-        <div class="flex items-center px-4 md:flex md:w-auto md:order-1">
-          <input
-            type="search"
-            id="searchInput"
-            class="p-3 border border-gray-300 rounded-md text-gray-700 text-lg focus:outline-none focus:ring-2 focus:ring-red-300 w-full"
-            placeholder="Tìm kiếm tên sách, thể loại hoặc từ khóa cụ thể..."
-          />
-          <button
-            type="button"
-            class="flex justify-center items-center w-12 h-12 rounded-full hover:bg-gray-100 ml-3"
-            aria-label="Voice search"
-          >
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/386207518883442a607ffd5068af0d6571abcc6654e219af2e8d84919581a2c5?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
-              alt="Voice Search"
-              class="w-6 h-6"
-            />
-          </button>
-        </div>
-
         <!-- User Options -->
         <div class="flex items-center gap-4 md:order-2">
           <!-- Notifications -->
@@ -80,18 +58,20 @@
           </button>
 
           <!-- Account -->
-          <button
-            class="px-3 py-1 rounded-xl hover:bg-gray-200 flex flex-col items-center"
-            aria-label="Account"
-          >
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/72968137062204ad157378c403ee3fc018381a90a36cda58e9b04db85b95f839"
-              alt="Tài khoản"
-              class="w-8 h-8"
-            />
-            <span class="text-sm mt-1 text-gray-700">Tài khoản</span>
-          </button>
+          <a href="/account">
+            <button
+              class="px-3 py-1 rounded-xl hover:bg-gray-200 flex flex-col items-center"
+              aria-label="Account"
+            >
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/72968137062204ad157378c403ee3fc018381a90a36cda58e9b04db85b95f839"
+                alt="Tài khoản"
+                class="w-8 h-8"
+              />
+              <span class="text-sm mt-1 text-gray-700">Tài khoản</span>
+            </button>
+          </a>
         </div>
       </div>
     </header>
@@ -273,7 +253,7 @@
       </form>
     </main>
 
-    <footer class="bg-white py-8 px-8">
+    {{! <footer class="bg-white py-8 px-8">
       <div class="mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
         <!-- Column 1: Logo and Address -->
         <div class="border-e-4">
@@ -376,7 +356,7 @@
           </div>
         </div>
       </div>
-    </footer>
+    </footer> }}
 
     <script>
       function previewBookImage(event) { const file = event.target.files[0];
