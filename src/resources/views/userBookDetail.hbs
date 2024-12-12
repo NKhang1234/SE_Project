@@ -1,1 +1,474 @@
-<h1>Details of book Page</h1>
+{{!-- Integrate Tailwinds in here --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/resources/css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>{{book.book_title}}</title>
+</head>
+<body>
+    <div class="app bg-gray-100 font-sans">
+        <header class="bg-white shadow">
+            <div class="container mx-auto flex justify-between items-center py-3 px-4">
+            <!-- Logo và thanh tìm kiếm -->
+            <div class="flex items-center gap-4">
+                <!-- Logo -->
+                <a href="/user" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+                <form action="/user/search" method="GET" class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4"> 
+                    <div class="relative w-full max-w-lg"> 
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> 
+                                <path fill-rule="evenodd" d="M12.293 13.707a8 8 0 111.414-1.414l4.243 4.243a1 1 0 01-1.414 1.414l-4.243-4.243zM14 8a6 6 0 11-12 0 6 6 0 0112 0z" clip-rule="evenodd" /> 
+                            </svg> 
+                        </span> 
+                            <input type="text" name="book_title" placeholder="Tìm kiếm tên sách..." value="{{searchParams.book_title}}" class="w-full pl-12 pr-4 py-3 text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400" /> 
+                    </div> 
+                    <div class="relative w-full max-w-xs"> 
+                        <select name="category_id" class="w-full pl-3 pr-10 py-3 text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400"> 
+                            <option value="">Chọn thể loại</option> 
+                            {{#each categories}} 
+                            <option value="{{category_id}}" 
+                            {{#ifCond ../searchParams.category_id '==' category_id}}
+                            selected{{/ifCond}}>{{category_name}}</option> 
+                            {{/each}} 
+                        </select> 
+                    </div> 
+                    <button type="submit" class="w-40 bg-red-500 text-white font-bold rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-400"> Tìm Kiếm </button> 
+                </form>
+            </div>
+            <!-- Icon menu -->
+            <div class="flex items-center gap-6 text-gray-600">
+                <!-- Sách của tôi -->
+                <a href="/user/myBook">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm8 2v12H6V4h8zM8 6a1 1 0 100 2h4a1 1 0 100-2H8z" />
+                        </svg>
+                        <span class="text-sm">Sách của tôi</span>
+                    </div>
+                </a>
+                <!-- Thông báo -->
+                <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6v5H3a1 1 0 100 2h14a1 1 0 100-2h-1V8a6 6 0 00-6-6zm-2 16a2 2 0 104 0H8z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm">Thông báo</span>
+                </div>
+                <!-- Tài khoản -->
+                <a href="/account">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 12a6 6 0 100-12 6 6 0 000 12zm-7 8a8 8 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-sm">Tài khoản</span>
+                    </div>
+                </a>
+            </div>
+            </div>
+        </header>
+
+        <div class="containter">
+            <div class="container mx-auto p-4">
+                <!-- Header Section -->
+                <nav class="text-sm text-gray-500 mb-4">
+                    <h1>{{category_name}}</h1>
+                </nav>
+                <!-- Main Content Section -->
+
+                <div class=" bg-gray-100 mx-auto  space-y-4">
+                <!-- Grid Layout -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- Image Section -->
+                    <div class="col-span-1 bg-white p-4 rounded-md shadow-md">
+                        <div class="flex flex-col items-center">
+                            <img src="{{book.book_img}}" alt="{{book.book_title}}" class="rounded-lg mb-4">
+                            <div class="grid grid-cols-5 gap-2">
+                                <img src="{{book.book_img}}" alt="{{book.book_title}}" class="rounded border">
+                                <img src="{{book.book_img}}" alt="{{book.book_title}}" class="rounded border">
+                                <img src="{{book.book_img}}" alt="{{book.book_title}}" class="rounded border">
+                                <img src="{{book.book_img}}" alt="{{book.book_title}}" class="rounded border">
+                                <img src="{{book.book_img}}" alt="{{book.book_title}}" class="rounded border">
+                            </div>
+                            
+                            {{!-- Borrow --}}
+                            {{#if user_id}}
+                                {{#if hasBorrowed}}
+                                    <p>You have already borrowed this book.</p>
+                                {{else}}
+                                        <form action="/user/borrow-book" method="POST">
+                                            <input type="hidden" name="book_code" value="{{book.book_code}}">
+                                            <button class="mt-4 bg-red-500 text-white px-10 py-2 rounded-md hover:bg-red-600" type="submit">ĐĂNG KÝ MƯỢN</button>
+                                        </form>
+                                {{/if}}
+                            {{else}}
+                                <p>Please <a href="/login">log in</a> to borrow this book.</p>
+                            {{/if}}
+
+                            {{!-- Add to favourite --}}
+                            {{#if isFavorite}}
+                            <form class="mt-3" action="/user/remove-from-favorite" method="POST">
+                                <input type="hidden" name="book_code" value="{{book.book_code}}">
+                                <button class="bg-red-100 text-red-600 font-bold py-2 px-4 rounded hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" type="submit">Xóa khỏi Sách yêu thích</button>
+                            </form>
+                            {{else}}
+                            <form class="mt-3" action="/user/add-to-favorite" method="POST">
+                                <input type="hidden" name="book_code" value="{{book.book_code}}">
+                                <button class="bg-red-100 text-red-600 font-bold py-2 px-4 rounded hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" type="submit">Thêm vào Sách yêu thích</button>
+                            </form>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <!-- Main Content Section -->
+                    <div class="col-span-2 bg-gray-100 rounded-md">
+                        <div class="bg-white p-4 rounded-md shadow-md">
+                            <h1 class="text-xl font-bold">{{book.book_title}}</h1>
+                            <p class="text-gray-600 mt-2">Nhà cung cấp: {{book.book_publisher}}</p>
+                            <p class="text-gray-600">Nhà xuất bản: {{book.book_publisher}}</p>
+                            <p class="text-gray-600 mt-2">Tác giả: {{book.book_author}}</p>
+                        </div>
+
+                        <!-- Thông tin chi tiết -->
+                        <div class="mt-6 bg-white p-4 rounded-md shadow-md shadow-md">
+                            <h2 class="text-lg font-semibold">Thông tin chi tiết</h2>
+                            <ul class="mt-2 text-gray-700">
+                                <li><strong>Mã hàng:</strong> 978019433136{{book.book_code}}</li>
+                                <li><strong>Ngày xuất bản:</strong> {{book.publish_date}}</li>
+                                <li><strong>Ngôn ngữ:</strong> {{book.language}}</li>
+                                <li><strong>Trọng lượng (gr):</strong> {{book.book_weight}} gr</li>
+                                <li><strong>Kích thước bao bì:</strong> {{book.book_size}} cm</li>
+                                <li><strong>Số trang:</strong> {{book.book_weight}}</li>
+                                <li><strong>Hình thức:</strong> {{book.book_cover}}</li>
+                            </ul>
+                        </div>
+
+                        <!-- Mô tả sản phẩm -->
+                        <div class="mt-6 bg-white p-4 rounded-md shadow-md">
+                            <h2 class="text-lg font-semibold">Mô tả sản phẩm</h2>
+                            <p class="text-gray-700 mt-2">
+                                {{book.description}}
+                            </p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Tủ sách liên quan -->
+                <section class="rounded-lg mx-4 mt-6 shadow-md mb-10 overflow-hidden">
+                    <div class="bg-pink-100 flex items-center p-3">
+                        <!-- Icon -->
+                        <i class="fa-solid fa-arrow-trend-up text-red-500 text-3xl mr-2"></i>
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold text-black">Những đầu sách liên quan</h2>
+                    </div>
+                    <!-- Books -->
+                    <div class="bg-white grid grid-cols-6 p-3 gap-4">
+                    <!-- Book Item 1 -->
+                        {{#each relatedBooks}}
+                        <div class="">
+                            <a href="/user/book/{{this.related_book_code}}" class="no-underline flex flex-col items-center">
+                                <img src="{{this.book_img}}" alt="{{this.book_title}}" class="w-28 h-40 object-cover rounded-md shadow-md">
+                                <p class="text-center text-sm font-medium mt-2">{{this.book_title}}</p>
+                            </a>
+                        </div>
+                        {{/each}}
+                    </div>
+                </section>
+
+                <!-- Reviews Section -->
+                <div class="mx-auto bg-white rounded-lg shadow-md overflow-hidden"> 
+                    <div class="p-4"> 
+                        <h2 class="text-xl font-semibold">Đánh giá sản phẩm</h2>
+                        <div class="flex items-center mt-2">
+                            <span class="text-2xl font-bold">{{averageRating}}/5</span>
+                            <span class="ml-2 text-sm text-gray-500">({{totalRatings}} đánh giá)</span>
+                        </div>
+
+                        <div class="mt-4">
+                            <!-- 5 sao -->
+                            <div class="flex items-center text-sm mt-2">
+                                <span class="w-16">5 sao</span>
+                                <div class="w-full h-2 bg-gray-200 rounded-full mr-2">
+                                    <div class="h-full bg-yellow-400 rounded-full" 
+                                        style="width: calc(({{ratingSummary.rating5}} / {{totalRatings}}) * 100%)">
+                                    </div>
+                                </div>
+                                <span class="w-12 text-right">{{ratingSummary.rating5}}</span>
+                            </div>
+
+                            <!-- 4 sao -->
+                            <div class="flex items-center text-sm mt-2">
+                                <span class="w-16">4 sao</span>
+                                <div class="w-full h-2 bg-gray-200 rounded-full mr-2">
+                                    <div class="h-full bg-yellow-400 rounded-full" 
+                                        style="width: calc(({{ratingSummary.rating4}} / {{totalRatings}}) * 100%)">
+                                    </div>
+                                </div>
+                                <span class="w-12 text-right">{{ratingSummary.rating4}}</span>
+                            </div>
+
+                            <!-- 3 sao -->
+                            <div class="flex items-center text-sm mt-2">
+                                <span class="w-16">3 sao</span>
+                                <div class="w-full h-2 bg-gray-200 rounded-full mr-2">
+                                    <div class="h-full bg-yellow-400 rounded-full" 
+                                        style="width: calc(({{ratingSummary.rating3}} / {{totalRatings}}) * 100%)">
+                                    </div>
+                                </div>
+                                <span class="w-12 text-right">{{ratingSummary.rating3}}</span>
+                            </div>
+
+                            <!-- 2 sao -->
+                            <div class="flex items-center text-sm mt-2">
+                                <span class="w-16">2 sao</span>
+                                <div class="w-full h-2 bg-gray-200 rounded-full mr-2">
+                                    <div class="h-full bg-yellow-400 rounded-full" 
+                                        style="width: calc(({{ratingSummary.rating2}} / {{totalRatings}}) * 100%)">
+                                    </div>
+                                </div>
+                                <span class="w-12 text-right">{{ratingSummary.rating2}}</span>
+                            </div>
+
+                            <!-- 1 sao -->
+                            <div class="flex items-center text-sm mt-2">
+                                <span class="w-16">1 sao</span>
+                                <div class="w-full h-2 bg-gray-200 rounded-full mr-2">
+                                    <div class="h-full bg-yellow-400 rounded-full" 
+                                        style="width: calc(({{ratingSummary.rating1}} / {{totalRatings}}) * 100%)">
+                                    </div>
+                                </div>
+                                <span class="w-12 text-right">{{ratingSummary.rating1}}</span>
+                            </div>
+                        </div>
+
+                            <h3 class="text-lg font-semibold mt-4"> <i class="fa-regular fa-comment"></i> Nhận xét</h3> 
+                            <div class="mt-2 flex items-start space-x-4">
+                            <!-- Avatar -->
+                            <img src="https://th.bing.com/th/id/OIP.Gic96FsQ57JDwJ1g1RVKkwAAAA?rs=1&pid=ImgDetMain" 
+                                alt="Avatar" 
+                                class="rounded-full h-10 w-10 object-cover">
+
+                            <!-- Input và Nút -->
+                            <form action="/user/add-comment" method="POST" class="flex flex-1 items-center space-x-2">
+                                <input type="hidden" name="book_code" value="{{book.book_code}}">
+                                
+                                <!-- Textarea -->
+                                <textarea class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                        name="content" 
+                                        rows="1" 
+                                        placeholder="Viết gì đó..." 
+                                        required></textarea>
+                                
+                                <!-- Nút Submit -->
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                    Gửi
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="rate-book mt-4">
+                            <h2 class="text-lg font-semibold flex items-center space-x-2">
+                                <i class="fa-solid fa-marker"></i>
+                                <span>Đánh giá cuốn sách này</span>
+                            </h2>
+
+                            <form action="/user/rate-book" method="POST" class="mt-2 flex items-center space-x-4">
+                                <!-- Hidden input for book code -->
+                                <input type="hidden" name="book_code" value="{{book.book_code}}">
+
+                                <!-- Rating Select -->
+                                <div class="flex items-center space-x-2">
+                                    <label for="rating_score" class="text-gray-600 font-medium">Điểm:</label>
+                                    <select name="rating_score" id="rating_score" 
+                                            class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required>
+                                        <option value="">Chọn điểm đánh giá</option>
+                                        <option value="1" {{#if (eq userRating 1)}}selected{{/if}}>1 sao</option>
+                                        <option value="2" {{#if (eq userRating 2)}}selected{{/if}}>2 sao</option>
+                                        <option value="3" {{#if (eq userRating 3)}}selected{{/if}}>3 sao</option>
+                                        <option value="4" {{#if (eq userRating 4)}}selected{{/if}}>4 sao</option>
+                                        <option value="5" {{#if (eq userRating 5)}}selected{{/if}}>5 sao</option>
+                                    </select>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                    Submit
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="mt-6">
+                            {{#each comments}}
+                            <div class="flex items-start space-x-4 py-4 border-b border-gray-200">
+                                <!-- Avatar -->
+                                <div class="flex-shrink-0">
+                                    <img src="{{this.user_avatar}}" alt="{{this.user_name}}'s Avatar" 
+                                        class="w-10 h-10 rounded-full object-cover">
+                                </div>
+
+                                <!-- Nội dung bình luận -->
+                                <div class="flex-1">
+                                    <!-- Tên người dùng và thời gian -->
+                                    <div class="flex justify-between items-center">
+                                        <p class="font-semibold text-gray-800">{{this.user_name}}</p>
+                                        <span class="text-sm text-gray-500">{{this.timestamp}}</span>
+                                    </div>
+
+                                    <!-- Nội dung -->
+                                    <p class="mt-2 text-gray-700">{{this.content}}</p>
+
+                                    <!-- Số lượt thích và hành động -->
+                                    <div class="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                                        <p>Likes: {{this.number_of_like}}, Dislikes: {{this.number_of_dislike}}</p>
+                                        <div class="flex items-center space-x-2">
+                                            <!-- Nút Like -->
+                                            <form action="/user/like-comment" method="POST">
+                                                <input type="hidden" name="comment_user_id" value="{{this.comment_user_id}}">
+                                                <input type="hidden" name="timestamp" value="{{this.timestamp}}">
+                                                <button type="submit" 
+                                                        class="text-lg p-1 text-blue-500 hover:underline focus:outline-none"><i class="fa-regular fa-thumbs-up"></i></button>
+                                            </form>
+
+                                            <!-- Nút Dislike -->
+                                            <form action="/user/dislike-comment" method="POST">
+                                                <input type="hidden" name="comment_user_id" value="{{this.comment_user_id}}">
+                                                <input type="hidden" name="timestamp" value="{{this.timestamp}}">
+                                                <button type="submit" 
+                                                        class="text-lg p-1 text-red-500 hover:underline focus:outline-none"><i class="fa-regular fa-thumbs-down"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <!-- Chỉ hiển thị với người dùng là chủ bình luận -->
+                                    {{#if (eq ../user_id this.comment_user_id)}}
+                                    <!-- Form chỉnh sửa bình luận -->
+                                    <button id="edit_comment_{{this.timestamp}}" class="bg-red-100 text-red-600 font-bold py-2 px-4 rounded hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                        Chỉnh sửa bình luận
+                                    </button>
+                                    <div id="edit-form-{{this.timestamp}}" class="hidden mt-2">
+                                        <form action="/user/edit-comment" method="POST" 
+                                        class="inline-flex items-center space-x-2">
+                                            <input type="hidden" name="timestamp" value="{{this.timestamp}}">
+                                            <input type="text" name="content" value="{{this.content}}" required 
+                                                class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            <button 
+                                                type="submit" 
+                                                class="bg-blue-500 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                Edit
+                                            </button>
+                                        </form>
+                                        <form 
+                                            action="/user/delete-comment" 
+                                            method="POST" 
+                                            class="inline-flex items-center ml-4">
+                                            <input 
+                                                type="hidden" 
+                                                name="timestamp" 
+                                                value="{{this.timestamp}}">
+                                            <button 
+                                                type="submit" 
+                                                class="bg-red-500 text-white font-medium px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                                Delete
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    {{/if}}
+
+                                </div>
+                            </div>
+                            {{/each}}
+
+                            {{#unless comments.length}}
+                            <p class="text-gray-500 text-center mt-4">No comments yet.</p>
+                            {{/unless}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-white text-gray-800 py-8">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Information -->
+                <a href="/user">
+                    <h2 class="text-4xl font-bold text-orange-500">BKBOOKS</h2>
+                    <p>Công ti Cổ phần sách BKBooks</p>
+                </a>
+                <!-- Services Section -->
+                <div>
+                    <h3 class="font-semibold">DỊCH VỤ</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Điều khoản dịch vụ</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Giới thiệu BKBooks</a></li>
+                    </ul>
+                </div>
+                <!-- Support Section -->
+                <div>
+                    <h3 class="font-semibold">HỖ TRỢ</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách mượn sách</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Đổi trả sách</a></li>
+                    </ul>
+                </div>
+                <!-- Account Management Section -->
+                <div>
+                    <h3 class="font-semibold">QUẢN LÝ TÀI KHOẢN</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Lịch sử mượn sách</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Xem thông tin tài khoản</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Information Row -->
+            <div class="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-1"></div> <!-- Empty Column -->
+                <div class="flex items-center">
+                    <p class="text-gray-600"> 
+                        <i class="fa-solid fa-location-dot"></i>
+                        Địa chỉ: 268 Lý Thường Kiệt, Phường 14, Quận 10, TP. HCM
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <p class="text-gray-600">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email: abcdef@hcmut.edu.vn
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <p class="text-gray-600">
+                        <i class="fa-solid fa-phone"></i>
+                        Phone: 0123456789
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.querySelectorAll("[id^=edit_comment_]").forEach(button => {
+            button.addEventListener("click", function() {
+                const timestamp = button.id.split('_')[2];
+                const form = document.getElementById(`edit-form-${timestamp}`);
+                form.classList.toggle('hidden');
+            });
+        });
+
+    </script>
+
+</body>
+</html>
+
+{{!-- This place is used to code header --}}
+<!-- Header -->
+
+
+
+

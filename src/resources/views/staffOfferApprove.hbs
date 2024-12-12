@@ -1,1 +1,197 @@
-<h1>Offer Approving Page</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add this link in the head of your HTML document to include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Offers</title>
+</head>
+<body>
+
+<header class="shadow" style="background-color: #FCDDEF;">
+    <div class="container mx-auto flex justify-between items-center py-3 px-4">
+        <!-- Logo -->
+            <a href="staffHome" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+
+        <!-- Navbar -->
+        <nav class="flex items-center space-x-6">
+            <a href="catalogManage" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-book fa-2x"></i>
+                <span>Manage Catalogue</span>
+            </a>
+            <a href="offerApprove" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-check-circle fa-2x"></i>
+                <span>Approve Offer</span>
+            </a>
+            <!-- Logout Button -->
+            <button class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-user fa-2x"></i>
+                <span>Logout</span>
+            </button>
+        </nav>
+    </div>
+</header>
+
+    <div class="container mx-auto my-10">
+        <h2 class="text-2xl font-bold text-center mb-6">Offers</h2>
+        
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="text-center text-orange-500 font-bold mb-4">
+            Loading offers, please wait...
+        </div>
+
+        <!-- Container for WAITING status offers -->
+        <div class="bg-yellow-100 p-4 mb-10 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold mb-4">Waiting Offers</h3>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2">Book Title</th>
+                        <th class="py-2">Author</th>
+                        <th class="py-2">Language</th>
+                        <th class="py-2">Publish Date</th>
+                        <th class="py-2">Publisher</th>
+                        <th class="py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="waitingOffersTable">
+                    <!-- Waiting offers will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Container for APPROVED status offers -->
+        <div class="bg-green-100 p-4 mb-10 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold mb-4">Approved Offers</h3>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2">Book Title</th>
+                        <th class="py-2">Author</th>
+                        <th class="py-2">Language</th>
+                        <th class="py-2">Publish Date</th>
+                        <th class="py-2">Publisher</th>
+                    </tr>
+                </thead>
+                <tbody id="approvedOffersTable">
+                    <!-- Approved offers will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Container for DENIED status offers -->
+        <div class="bg-red-100 p-4 mb-10 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold mb-4">Denied Offers</h3>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2">Book Title</th>
+                        <th class="py-2">Author</th>
+                        <th class="py-2">Language</th>
+                        <th class="py-2">Publish Date</th>
+                        <th class="py-2">Publisher</th>
+                    </tr>
+                </thead>
+                <tbody id="deniedOffersTable">
+                    <!-- Denied offers will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_ROOT = "http://localhost:3001";
+
+        async function fetchOffers() {
+            try {
+                const response = await fetch(`${API_ROOT}/api/offers`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch offers');
+                }
+                
+                const offers = await response.json();
+
+                const waitingTable = document.getElementById('waitingOffersTable');
+                const approvedTable = document.getElementById('approvedOffersTable');
+                const deniedTable = document.getElementById('deniedOffersTable');
+
+                waitingTable.innerHTML = '';
+                approvedTable.innerHTML = '';
+                deniedTable.innerHTML = '';
+
+                offers.forEach(offer => {
+                    const row = `
+                        <tr class="border-b">
+                            <td class="py-2 px-4">${offer.book_title}</td>
+                            <td class="py-2 px-4">${offer.book_author}</td>
+                            <td class="py-2 px-4">${offer.language}</td>
+                            <td class="py-2 px-4">${new Date(offer.publish_date).toLocaleDateString()}</td>
+                            <td class="py-2 px-4">${offer.publisher_name}</td>
+                            ${offer.status === 'WAITING' ? `
+                                <td class="py-2 px-4">
+                                    <button onclick="updateOfferStatus(${offer.offer_id}, 'APPROVED')" class="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded">Accept</button>
+                                    <button onclick="updateOfferStatus(${offer.offer_id}, 'DENIED')" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded">Deny</button>
+                                </td>
+                            ` : ''}
+                        </tr>
+                    `;
+
+                    if (offer.status === 'WAITING') {
+                        waitingTable.innerHTML += row;
+                    } else if (offer.status === 'APPROVED') {
+                        approvedTable.innerHTML += row;
+                    } else if (offer.status === 'DENIED') {
+                        deniedTable.innerHTML += row;
+                    }
+                });
+            document.getElementById('loadingIndicator').style.display = 'none';
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        async function updateOfferStatus(offerId, status) {
+            try {
+                const response = await fetch(`${API_ROOT}/api/offers/${offerId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: `Offer status updated to ${status}!`,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    fetchOffers();
+                } else {
+                    throw new Error('Failed to update offer status');
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was a problem updating the offer status.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchOffers);
+    </script>
+</body>
+</html>
