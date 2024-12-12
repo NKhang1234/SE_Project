@@ -34,11 +34,19 @@ class siteController {
     async register(req, res) {
       const { username, role, password } = req.body;
       try {
-        // const hashedPassword = await bcrypt.hash(password, 10);
-        const query = 'INSERT INTO user_account (username, role, hashed_password) VALUES ($1, $2, $3)';
-        await pool.query(query, [username, role, password]);
-        res.redirect('/'); // login page
-        //res.send('User registered');
+         // Check if username already exists
+          const checkQuery = 'SELECT * FROM user_account WHERE username = $1';
+          const checkResult = await pool.query(checkQuery, [username]);
+
+          if (checkResult.rows.length > 0) {
+            // If username exists, send an error response
+            return res.status(400).send('Username already taken');
+          }
+          // const hashedPassword = await bcrypt.hash(password, 10);
+          const query = 'INSERT INTO user_account (username, role, hashed_password) VALUES ($1, $2, $3)';
+          await pool.query(query, [username, role, password]);
+          res.redirect('/'); // login page
+          //res.send('User registered');
       } catch (err) {
         console.error(err);
         res.status(500).send('Error registering user');
@@ -57,6 +65,7 @@ class siteController {
     
         const user = rows[0];
         // const match = await bcrypt.compare(password, user.password);
+        console.log(user);
         if (password === user.hashed_password) {
           req.session.userId = user.user_id;
           req.session.userName = user.username;
