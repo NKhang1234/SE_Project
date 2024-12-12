@@ -1,22 +1,22 @@
-require("dotenv").config();
-const express = require("express");
-const morgan = require("morgan");
-const path = require("path");
-const handlebars = require("express-handlebars");
-const { neon } = require("@neondatabase/serverless");
-const db = require("./app/Models");
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const path = require('path');
+const handlebars = require('express-handlebars');
+const { neon } = require('@neondatabase/serverless');
+const db = require('./app/Models');
 
-const session = require("express-session");
-const bcrypt = require("bcryptjs");
-const PgSession = require("connect-pg-simple")(session);
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const PgSession = require('connect-pg-simple')(session);
 
-const pool = require("./config/db/index.js"); // Import the pool
-const connectDB = require("./config/sequelize");
+const pool = require('./config/db/index.js'); // Import the pool
+const connectDB = require('./config/sequelize');
 
 const app = express();
 const port = 3000;
 
-const route = require("./routes/indexRouter.js");
+const route = require('./routes/indexRouter.js');
 
 // Connect to DB with Neon (for querying)
 const sql = neon(process.env.DATABASE_URL);
@@ -27,20 +27,20 @@ const sql = neon(process.env.DATABASE_URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  session({
-    store: new PgSession({
-      pool: pool,
-      tableName: "session",
-    }),
-    secret: process.env.secret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 1000 * 60 * 60, // 1 hour
-    },
-  })
+    session({
+        store: new PgSession({
+            pool: pool,
+            tableName: 'session',
+        }),
+        secret: process.env.secret,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: false,
+            maxAge: 1000 * 60 * 60, // 1 hour
+        },
+    })
 );
 
 // Create a pg Pool for session store (this should use the pg Pool object)
@@ -49,31 +49,30 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  session({
-    store: new PgSession({
-      pool: pool,
-      tableName: "session",
-    }),
-    secret: process.env.secret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 1000 * 60 * 60, // 1 hour
-    },
-  })
+    session({
+        store: new PgSession({
+            pool: pool,
+            tableName: 'session',
+        }),
+        secret: process.env.secret,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: false,
+            maxAge: 1000 * 60 * 60, // 1 hour
+        },
+    })
 );
 
 //connect to DB sequelize
 connectDB(db.sequelize);
 
 app.use(express.static(path.join(__dirname, '/resources')));
-
 app.use(
-  express.urlencoded({
-    extended: true,
-  })
+    express.urlencoded({
+        extended: true,
+    })
 );
 app.use(express.json());
 // HTTP logger
@@ -118,10 +117,11 @@ app.engine(
         }
     })
 );
-app.set("view engine", ".hbs");
-app.set("views", path.join(__dirname, "resources", "views"));
+app.set('view engine', '.hbs');
+app.set('views', path.join(__dirname, 'resources', 'views'));
 
 // console.log(`Path: ${path.join(__dirname,'resources/views')}`);
+
 // Routes init
 route(app);
 
