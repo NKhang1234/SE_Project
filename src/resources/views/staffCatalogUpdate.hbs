@@ -98,9 +98,11 @@
       </div>
     </div>
     <script>
+              const apiRoot = '/staff/api';
+
       async function fetchBookData(bookCode) {
         try {
-          const response = await fetch('http://localhost:3001/api/books');
+          const response = await fetch(`${apiRoot}/catalogManage`);
           const books = await response.json();
           const book = books.find(b => b.book_code == bookCode);
           if (book) {
@@ -158,7 +160,7 @@
             const formData = new FormData(form);
             const jsonData = Object.fromEntries(formData.entries());
             try {
-              const response = await fetch(`http://localhost:3001/api/books/${bookCode}`, {
+              const response = await fetch(`${apiRoot}/catalogUpdate/${bookCode}`, {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',

@@ -104,11 +104,11 @@
     </div>
 
     <script>
-        const API_ROOT = "http://localhost:3001";
+        const API_ROOT = "/staff/api";
 
         async function fetchOffers() {
             try {
-                const response = await fetch(`${API_ROOT}/api/offers`);
+                const response = await fetch(`${API_ROOT}/offerList`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch offers');
                 }
@@ -162,7 +162,7 @@
 
         async function updateOfferStatus(offerId, status) {
             try {
-                const response = await fetch(`${API_ROOT}/api/offers/${offerId}/status`, {
+                const response = await fetch(`${API_ROOT}/offerApprove/${offerId}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
