@@ -116,9 +116,8 @@ class siteController {
   
           // Truy vấn thông tin người dùng
           const user = await db.sequelize.query(
-              `SELECT ua.username, ua.email, ua.avatar_image, m.membership_type
+              `SELECT ua.username, ua.email, ua.avatar_image
                FROM user_account ua
-               JOIN member m ON ua.user_id = m.member_id
                WHERE ua.user_id = :user_id`,
               {
                   replacements: { user_id: user_id },
