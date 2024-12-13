@@ -101,6 +101,7 @@
     </div>
 
     <script>
+        const apiRoot = '/staff/api';
         document.getElementById('addBookForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -109,7 +110,7 @@
             const jsonData = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch('http://localhost:3001/api/books', {
+                const response = await fetch(`${apiRoot}/catalogAdd`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

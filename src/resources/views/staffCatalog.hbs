@@ -65,12 +65,12 @@
 
     <script>
         // Define API root
-        const apiRoot = 'http://localhost:3001/api';
+        const apiRoot = '/staff/api';
 
         // Fetch books from API
         async function fetchBooks() {
             try {
-                const response = await fetch(`${apiRoot}/books`);
+                const response = await fetch(`${apiRoot}/catalogManage`);
                 const data = await response.json();
 
                 // Full book details (for internal use)
