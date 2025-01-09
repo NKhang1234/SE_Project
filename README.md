@@ -25,5 +25,5 @@
 ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white)
 
 ## Instruction
-- When you have already cloned this project on your local computer, please run **npm install** to download all the dependencies.
-- To run the application, please use: **npm start**
+- When you have already cloned this project on your local computer, please run ***npm install*** to download all the dependencies.
+- To run the application, please use: ***npm start***
