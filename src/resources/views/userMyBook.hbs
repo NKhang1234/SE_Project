@@ -1,0 +1,214 @@
+{{!-- Integrate Tailwinds in here --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/resources/css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Sách của tôi</title>
+</head>
+<body>
+    <div class="app bg-gray-100 font-sans">
+        <header class="bg-white shadow">
+            <div class="container mx-auto flex justify-between items-center py-3 px-4">
+            <!-- Logo và thanh tìm kiếm -->
+            <div class="flex items-center gap-4">
+                <!-- Logo -->
+                <a href="/user" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+                <form action="/user/search" method="GET" class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4"> 
+                    <div class="relative w-full max-w-lg"> 
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> 
+                                <path fill-rule="evenodd" d="M12.293 13.707a8 8 0 111.414-1.414l4.243 4.243a1 1 0 01-1.414 1.414l-4.243-4.243zM14 8a6 6 0 11-12 0 6 6 0 0112 0z" clip-rule="evenodd" /> 
+                            </svg> 
+                        </span> 
+                            <input type="text" name="book_title" placeholder="Tìm kiếm tên sách..." value="{{searchParams.book_title}}" class="w-full pl-12 pr-4 py-3 text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400" /> 
+                    </div> 
+                    <div class="relative w-full max-w-xs"> 
+                        <select name="category_id" class="w-full pl-3 pr-10 py-3 text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400"> 
+                            <option value="">Chọn thể loại</option> 
+                            {{#each allCategories}} 
+                            <option value="{{category_id}}" 
+                            {{#ifCond ../searchParams.category_id '==' category_id}}
+                            selected{{/ifCond}}>{{category_name}}</option> 
+                            {{/each}} 
+                        </select> 
+                    </div> 
+                    <button type="submit" class="w-40 bg-red-500 text-white font-bold rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-400"> Tìm Kiếm </button> 
+                </form>
+            </div>
+            <!-- Icon menu -->
+            <div class="flex items-center gap-6 text-gray-600">
+                <!-- Sách của tôi -->
+                <a href="/user/myBook">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm8 2v12H6V4h8zM8 6a1 1 0 100 2h4a1 1 0 100-2H8z" />
+                        </svg>
+                        <span class="text-sm">Sách của tôi</span>
+                    </div>
+                </a>
+                <!-- Thông báo -->
+                <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6v5H3a1 1 0 100 2h14a1 1 0 100-2h-1V8a6 6 0 00-6-6zm-2 16a2 2 0 104 0H8z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm">Thông báo</span>
+                </div>
+                <!-- Tài khoản -->
+                <a href="/account">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 12a6 6 0 100-12 6 6 0 000 12zm-7 8a8 8 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-sm">Tài khoản</span>
+                    </div>
+                </a>
+            </div>
+            </div>
+        </header>
+
+        <div class="containter">
+        <div class="container mx-auto p-4">
+            <!-- Section: Sách đã mượn-->
+            <section class="rounded-lg mx-4 mt-6 shadow-md mb-10 overflow-hidden">
+                <div class="bg-pink-100 flex items-center p-3">
+                    <!-- Icon -->
+                    <div class="text-red-500 text-2xl mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 2a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H6zm8 4h4v2h-4V6zm0 4h4v2h-4v-2zm0 4h4v2h-4v-2z" />
+                        </svg>
+                    </div>
+                    <!-- Title -->
+                    <h2 class="text-xl font-bold text-black">Sách đã mượn</h2>
+                </div>
+                <!-- Book Categories -->
+                <div class="bg-white grid grid-cols-6 p-3 gap-4">
+                <!-- Book Item 1 -->
+                    {{#each borrowedBooks}}
+                    <div class="flex flex-col items-center">
+                        <a href="/user/book/{{this.book_code}}" class="no-underline flex flex-col items-center">
+                            <img src="{{book_img}}" alt="{{book_title}}" class="w-28 h-40 object-cover rounded-md shadow-md">
+                            <p class="text-center text-m font-medium my-2">{{book_title}}</p>
+                            <p class="text-gray-700"><strong>Ngày Mượn:</strong> {{borrow_date}}</p>
+                            <p class="text-gray-700"><strong>Ngày Trả:</strong> {{return_date}}</p>
+                        </a>
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+
+            <!-- Section: Sách yêu thích -->
+            <section class="rounded-lg mx-4 mt-6 shadow-md mb-10 overflow-hidden">
+                <div class="bg-pink-100 flex items-center p-3">
+                    <!-- Icon -->
+                    <i class="fa-solid fa-heart text-red-500 text-3xl mr-2"></i>
+                    <!-- Title -->
+                    <h2 class="text-xl font-bold text-black">Sách yêu thích</h2>
+                </div>
+                <!-- Book Categories -->
+                <div class="bg-white grid grid-cols-6 p-3 gap-4">
+                <!-- Book Item 1 -->
+                    {{#each favoriteBooks}}
+                    <div class="flex flex-col items-center">
+                        <a href="/user/book/{{this.book_code}}" class="no-underline flex flex-col items-center">
+                            <img src="{{book_img}}" alt="{{book_title}}" class="w-28 h-40 object-cover rounded-md shadow-md">
+                            <p class="text-center text-sm font-medium mt-2">{{book_title}}</p>
+                        </a>
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+
+            <!-- Section: Danh Mục Thể Loại Sách -->
+            <section class="rounded-lg mx-4 mt-6 shadow-md mb-10 overflow-hidden">
+                <div class="bg-pink-100 flex items-center p-3">
+                    <!-- Icon -->
+                    <i class="fa-solid fa-heart text-red-500 text-3xl mr-2"></i>
+                    <!-- Title -->
+                    <h2 class="text-xl font-bold text-black">Thể Loại Sách Yêu Thích</h2>
+                </div>
+                <!-- Book Categories -->
+                <div class="bg-white grid grid-cols-6 p-3 gap-4">
+                <!-- Book Item 1 -->
+                    {{#each favoriteCategories}}
+                    <div class="flex flex-col items-center">
+                        <a href="/user/category/{{slug}}" class="no-underline flex flex-col items-center">
+                            <img src="{{category_img}}" alt="{{category_name}}" class="w-28 h-40 object-cover rounded-md shadow-md">
+                            <p class="text-center text-sm font-medium mt-2">{{category_name}}</p>
+                        </a>
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+
+        </div>
+        </div>
+
+        <footer class="bg-white text-gray-800 py-8">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Information -->
+                <a href="/user">
+                    <h2 class="text-4xl font-bold text-orange-500">BKBOOKS</h2>
+                    <p>Công ti Cổ phần sách BKBooks</p>
+                </a>
+                <!-- Services Section -->
+                <div>
+                    <h3 class="font-semibold">DỊCH VỤ</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Điều khoản dịch vụ</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Giới thiệu BKBooks</a></li>
+                    </ul>
+                </div>
+                <!-- Support Section -->
+                <div>
+                    <h3 class="font-semibold">HỖ TRỢ</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách mượn sách</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Đổi trả sách</a></li>
+                    </ul>
+                </div>
+                <!-- Account Management Section -->
+                <div>
+                    <h3 class="font-semibold">QUẢN LÝ TÀI KHOẢN</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Lịch sử mượn sách</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Xem thông tin tài khoản</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Information Row -->
+            <div class="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-1"></div> <!-- Empty Column -->
+                <div class="flex items-center">
+                    <p class="text-gray-600"> 
+                        <i class="fa-solid fa-location-dot"></i>
+                        Địa chỉ: 268 Lý Thường Kiệt, Phường 14, Quận 10, TP. HCM
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <p class="text-gray-600">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email: abcdef@hcmut.edu.vn
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <p class="text-gray-600">
+                        <i class="fa-solid fa-phone"></i>
+                        Phone: 0123456789
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    
+</body>
+</html>
+
+{{!-- This place is used to code header --}}
+<!-- Header -->
+

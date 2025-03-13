@@ -1,1 +1,173 @@
-<h1>Catalog Add page</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add this link in the head of your HTML document to include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Add Book</title>
+</head>
+<body>
+<header class="shadow" style="background-color: #FCDDEF;">
+    <div class="container mx-auto flex justify-between items-center py-3 px-4">
+        <!-- Logo -->
+            <a href="staffHome" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+
+        <!-- Navbar -->
+        <nav class="flex items-center space-x-6">
+            <a href="catalogManage" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-book fa-2x"></i>
+                <span>Manage Catalogue</span>
+            </a>
+            <a href="offerApprove" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                <i class="fas fa-check-circle fa-2x"></i>
+                <span>Approve Offer</span>
+            </a>
+            <!-- Logout Button -->
+            <form action="/logout" method="post">
+                <button type="submit" class="flex flex-col items-center text-gray-700 hover:text-orange-400">
+                    <i class="fas fa-user fa-2x"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </nav>
+    </div>
+</header>
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl">
+            <h2 class="text-2xl font-bold text-center mb-6">Add a New Book</h2>
+            <form id="addBookForm">
+                <div class="mb-4">
+                    <label for="title" class="block text-sm font-bold mb-2">Title</label>
+                    <input type="text" id="title" name="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <!-- Add the rest of the fields below in a similar fashion -->
+                <div class="mb-4">
+                    <label for="author" class="block text-sm font-bold mb-2">Author</label>
+                    <input type="text" id="author" name="author" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="weight" class="block text-sm font-bold mb-2">Weight</label>
+                    <input type="text" id="weight" name="weight" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+               <div class="mb-4">
+                <label for="category_id" class="block text-sm font-bold mb-2">Category</label>
+                <select id="category_id" name="category_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <!-- Options will be populated here -->
+                </select>
+                </div>
+                <div class="mb-4">
+                    <label for="img" class="block text-sm font-bold mb-2">Image URL</label>
+                    <input type="text" id="img" name="img" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="provider" class="block text-sm font-bold mb-2">Provider</label>
+                    <input type="text" id="provider" name="provider" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="publisher" class="block text-sm font-bold mb-2">Publisher</label>
+                    <input type="text" id="publisher" name="publisher" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                <label for="cover" class="block text-sm font-bold mb-2">Cover</label>
+                    <select id="cover" name="book_cover" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="Bìa Cứng" selected>Bìa Cứng</option>
+                        <option value="Bìa Mềm">Bìa Mềm</option>
+                    </select>  
+                </div>
+                <div class="mb-4">
+                    <label for="publish_date" class="block text-sm font-bold mb-2">Publish Date</label>
+                    <input type="date" id="publish_date" name="publish_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="language" class="block text-sm font-bold mb-2">Language</label>
+                    <input type="text" id="language" name="language" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="size" class="block text-sm font-bold mb-2">Size</label>
+                    <input type="text" id="size" name="size" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-bold mb-2">Description</label>
+                    <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="4" required></textarea>
+                </div>
+                <div class="mb-6">
+                    <label for="rating_score" class="block text-sm font-bold mb-2">Rating Score</label>
+                    <input type="number" id="rating_score" name="rating_score" min="0" max="5" step="1" value="0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-orange-600">
+                        Add Book
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const apiRoot = '/staff/api';
+        
+        async function fetchCategories() {
+        try {
+            const response = await fetch(`${apiRoot}/catalogManage/category`);
+            const categories = await response.json();
+            const categorySelect = document.getElementById('category_id');
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.category_id;
+                option.textContent = category.category_name;
+                categorySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    }
+
+        document.getElementById('addBookForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const jsonData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`${apiRoot}/catalogAdd`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jsonData),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Book added successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    form.reset();
+                    window.location.href = 'catalogManage';
+                } else {
+                    throw new Error('Failed to add book');
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was a problem adding the book.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+
+        // Fetch the categories on page load
+        fetchCategories();
+    </script>
+</body>
+</html>

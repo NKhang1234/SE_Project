@@ -1,0 +1,371 @@
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Editing Page</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow">
+      <!-- Ad Block -->
+      <div id="ad-blocks">
+        <img
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/705484c340074f4bb58acf514f7999f04570d7e6f9f7f1c6c0066a1dd1ecf602?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+          alt="BKBooks Logo"
+          class="logo"
+        />
+      </div>
+
+      <div
+        class="max-w-screen-2xl mx-auto flex justify-between items-center p-1"
+      >
+        <!-- Brand Logo -->
+        <div class="flex items-center">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f01c8a6368015326b16c8754cfccde2be765fa7e789bb29dd64da5acf0e957f8?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+            alt="Brand Logo"
+            class="h-8"
+          />
+        </div>
+
+        <!-- User Options -->
+        <div class="flex items-center gap-4 md:order-2">
+          <!-- Notifications -->
+          <button
+            class="px-3 py-1 rounded-xl hover:bg-gray-200 flex flex-col items-center"
+            aria-label="Notifications"
+          >
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/7a468e6e6b4e2043e3be76040321071f8ebacfab700bde03a2d8faa0b175543e"
+              alt="Thông báo"
+              class="w-8 h-8"
+            />
+            <span class="text-sm mt-1 text-gray-700">Thông báo</span>
+          </button>
+
+          <!-- Account -->
+          <a href="/account">
+            <button
+              class="px-3 py-1 rounded-xl hover:bg-gray-200 flex flex-col items-center"
+              aria-label="Account"
+            >
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/72968137062204ad157378c403ee3fc018381a90a36cda58e9b04db85b95f839"
+                alt="Tài khoản"
+                class="w-8 h-8"
+              />
+              <span class="text-sm mt-1 text-gray-700">Tài khoản</span>
+            </button>
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="w-full">
+      <section>
+        <nav
+          class="flex flex-row items-center justify-between text-xl text-black w-full"
+        >
+          <!-- First Button -->
+          <a
+            href="/publisher/offerStatus"
+            class="grow w-full p-4 bg-red-300 text-center"
+          >
+            DANH MỤC LIỆT KÊ
+          </a>
+          <!-- Second Button -->
+          <a
+            href="/publisher/add"
+            class="grow w-full p-4 bg-green-500 text-center"
+          >
+            ĐĂNG KÝ MỚI
+          </a>
+        </nav>
+      </section>
+
+      <!-- Breadcrumb -->
+      <nav class="container mx-auto px-4 py-2 text-lg text-gray-600">
+        <a href="/publisher/add" class="text-blue-600">Đăng ký mới /</a>
+        Chỉnh sửa tiêu đề sách
+      </nav>
+
+      <!-- Main Content -->
+
+      <form
+        id="publisherBookForm"
+        action="/publisher/edit"
+        method="POST"
+        class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8"
+        enctype="multipart/form-data"
+      >
+        <input type="hidden" name="_method" value="PUT" />
+        <input type="hidden" name="offer_id" value="{{offer_id}}" />
+
+        <!-- Left Section -->
+        <div class="lg:w-2/5 bg-white rounded-lg shadow p-4">
+          <!-- Book Cover Image Preview -->
+          <img
+            src="/img/{{book_img}}"
+            alt="Book cover"
+            id="book-upload-image"
+            class="w-full mb-4 rounded-lg shadow"
+          />
+          <!-- Upload Button -->
+          <div class="flex justify-center items-center">
+            <label
+              for="book-image-upload"
+              class="bg-red-600 text-white py-2 px-4 rounded-lg w-full text-center cursor-pointer hover:bg-red-700"
+            >
+              Tải hình ảnh lên
+            </label>
+            <input
+              id="book-image-upload"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              name="book_img"
+              onchange="previewBookImage(event)"
+            />
+          </div>
+        </div>
+
+        <!-- Right Section -->
+        <div
+          class="lg:w-3/5 bg-white rounded-lg shadow p-6 text-xl font-bold text-black"
+        >
+          <h2 class="text-2xl font-bold mb-4 text-gray-700">
+            Chỉnh sửa tiêu đề sách
+          </h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-gray-700 font-medium">Tiêu đề sách:</label>
+              <input
+                type="text"
+                id="bookTitle"
+                name="book_title"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_title}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">ISBN:</label>
+              <input
+                type="text"
+                id="bookISBN"
+                name="book_code"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_code}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Tác giả:</label>
+              <input
+                type="text"
+                id="bookAuthor"
+                name="book_author"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_author}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Thể loại:</label>
+              <input
+                type="text"
+                id="bookType"
+                name="book_category"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{book_category}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Ngôn ngữ:</label>
+              <input
+                type="text"
+                id="bookLanguage"
+                name="language"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{language}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Ngày xuất bản:</label>
+              <input
+                type="date"
+                id="bookDatePublish"
+                name="publish_date"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{publish_date}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Giá gốc (VND):</label>
+              <input
+                type="text"
+                id="bookOriginalCost"
+                name="base_price"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{base_price}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Số lượng ưu đãi:</label>
+              <input
+                type="text"
+                id="bookNumberOfDiscount"
+                name="number_of_discount"
+                class="mt-1 p-2 w-full border rounded-lg"
+                value="{{number_of_discount}}"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-medium">Ưu đãi:</label>
+              <textarea
+                rows="3"
+                id="bookEventDiscount"
+                name="discount"
+                class="mt-1 p-2 w-full border rounded-lg"
+              >{{discount}}</textarea>
+            </div>
+            <!-- Submit Button -->
+            <div class="col-span-2 flex justify-end">
+              <button
+                type="submit"
+                class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              >
+                Gửi
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </main>
+
+    {{! <footer class="bg-white py-8 px-8">
+      <div class="mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
+        <!-- Column 1: Logo and Address -->
+        <div class="border-e-4">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/77df4fa487540b8fe9de60db5c0267b7f6467e8ac57f1b0578a33a467a529f96?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+            alt="BKBooks logo"
+            class="w-1/3 mb-4"
+          />
+          <p>
+            Địa chỉ: 123 đường abc, quận x, TP c, tỉnh d
+            <br />
+            Công ty Cổ phần sách BKBooks
+          </p>
+        </div>
+
+        <!-- Column 2: Services, Help, Account Management, and Contact -->
+        <div class="flex flex-col space-y-8">
+          <!-- Row 1: Service, Help, Manage Account -->
+          <div class="flex justify-between">
+            <!-- Services -->
+            <div>
+              <h2 class="text-lg font-semibold mb-2">DỊCH VỤ</h2>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="hover:underline">Điều khoản dịch vụ</a>
+                </li>
+                <li>
+                  <a href="#" class="hover:underline">Chính sách bảo mật</a>
+                </li>
+                <li>
+                  <a href="#" class="hover:underline">Giới thiệu BKBooks</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Help -->
+            <div>
+              <h2 class="text-lg font-semibold mb-2">HỖ TRỢ</h2>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="hover:underline">Chính sách mượn sách</a>
+                </li>
+                <li>
+                  <a href="#" class="hover:underline">Đổi trả sách</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Manage Account -->
+            <div>
+              <h2 class="text-lg font-semibold mb-2">QUẢN LÝ TÀI KHOẢN</h2>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="hover:underline">Lịch sử mượn sách</a>
+                </li>
+                <li>
+                  <a href="#" class="hover:underline">Xem thông tin tài khoản</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Row 2: Contact -->
+          <div class="space-y-4">
+            <h2 class="text-lg font-semibold">Liên hệ</h2>
+            <div class="flex flex-wrap gap-8">
+              <!-- Address -->
+              <div class="flex items-center gap-2">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/ce4781dd7ae337953e5fb1911cbb68c7e1e4d393af4f1506e783af07a337406f?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+                  alt="Location icon"
+                  class="w-6"
+                />
+                <p>123 đường abc, quận x, Thành phố c, tỉnh d</p>
+              </div>
+
+              <!-- Email -->
+              <div class="flex items-center gap-2">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/d3fc6cbc37e5e1d85019dc3cea1e89502b57e29bd991b7855d6400a6efb06621?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+                  alt="Email icon"
+                  class="w-6"
+                />
+                <a
+                  href="mailto:abcdef@hcmut.edu.vn"
+                  class="hover:underline"
+                >abcdef@hcmut.edu.vn</a>
+              </div>
+
+              <!-- Phone -->
+              <div class="flex items-center gap-2">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/a3a2038efdbef3495aae6e41ef22207346c1378477da67e7866b21eb38050e4e?placeholderIfAbsent=true&apiKey=fe65ef85b375408eac075f18f305b6ac"
+                  alt="Phone icon"
+                  class="w-6"
+                />
+                <a href="tel:0123456789" class="hover:underline">0123456789</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer> }}
+
+    <script>
+      function previewBookImage(event) { const file = event.target.files[0];
+      const reader = new FileReader(); ; reader.onload = function (e) { const
+      imgElement = document.getElementById('book-upload-image'); imgElement.src
+      = e.target.result; document.getElementById("book-image-upload").value =
+      file; }; if (file) { reader.readAsDataURL(file); } }
+    </script>
+  </body>
+</html>

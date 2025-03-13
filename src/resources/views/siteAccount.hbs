@@ -1,1 +1,237 @@
-<h1>Manage Account Page</h1>
+{{!-- Integrate Tailwinds in here --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/resources/css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Sách của tôi</title>
+</head>
+<body>
+    <div class="app bg-gray-100 font-sans">
+        <header class="bg-white shadow">
+            <div class="container mx-auto flex justify-between items-center py-3 px-4">
+            <!-- Logo và thanh tìm kiếm -->
+            <div class="flex items-center gap-4">
+                <!-- Logo -->
+                <a href="/user" class="text-orange-400 font-bold text-3xl">BKBOOKS</a>
+            </div>
+            <!-- Icon menu -->
+            <div class="flex items-center gap-6 text-gray-600">
+                <!-- Tài khoản -->
+                <a href="/account">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 12a6 6 0 100-12 6 6 0 000 12zm-7 8a8 8 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-sm">Tài khoản</span>
+                    </div>
+                </a>
+            </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto my-10 p-10 bg-white rounded-lg shadow-md">
+    
+            <div class="flex flex-col items-center mb-6">
+                <img src="{{user.avatar_image}}" alt="Avatar" class="w-24 h-24 rounded-full mb-4">
+                <button id="btn-change-avatar" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Đổi ảnh đại diện</button>
+                <!-- Form đổi avatar (ẩn ban đầu) -->
+                <div id="change-avatar" class="hidden">
+                    <form 
+                        action="/change-avatar" 
+                        method="POST" 
+                        class=" flex flex-col items-center space-y-4 mt-4 w-max p-4"
+                    >
+                        <input 
+                            type="text" 
+                            name="newAvatar" required
+                            placeholder="Nhập link ảnh mới"
+                            class="block w-max p-1 text-xl text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
+                        <button 
+                            type="submit" 
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Cập nhật ảnh
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Họ -->
+                <div>
+                    <label for="ho" class="block text-m font-medium text-gray-700">Họ:</label>
+                    <input id="ho" type="text" value="Nguyễn Văn" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- Tên -->
+                <div>
+                    <label for="ten" class="block text-m font-medium text-gray-700">Tên:</label>
+                    <input id="ten" type="text" value="B" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- Tên đăng nhập -->
+                <div class="col-span-1 md:col-span-2">
+                    <label for="username" class="block text-m font-medium text-gray-700">Tên đăng nhập:</label>
+                    <input id="username" type="text" value="{{user.username}}" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+                </div>
+                <!-- Mật khẩu -->
+                <div class="col-span-1 md:col-span-2 flex items-center">
+                    <div class="w-full">
+                        <label for="password" class="block text-m font-medium text-gray-700">Mật khẩu:</label>
+                        <input id="password" type="password" value="********" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <button id="btn-change-password" class="ml-4 bg-red-500 text-white rounded hover:bg-red-600">Đổi mật khẩu</button>
+                </div>
+                {{!-- Đổi mật khẩu --}}
+                <div id="change-password" class="hidden col-span-1 md:col-span-2">
+                    <form action="/change-password" method="POST" 
+                    class="inline-flex items-center space-x-2">
+                        <input type="password" name="currentPassword" placeholder="Mật khẩu hiện tại" required 
+                            class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" name="newPassword" placeholder="Mật khẩu mới" required 
+                            class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" name="confirmPassword" placeholder="Xác nhận mật khẩu mới" required 
+                            class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button 
+                            type="submit" 
+                            class="bg-blue-500 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Xác nhận
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Ngày sinh -->
+                <div>
+                    <label for="dob" class="block text-m font-medium text-gray-700">Ngày sinh:</label>
+                    <input id="dob" type="text" value="01/11/2000" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- Địa chỉ -->
+                <div>
+                    <label for="address" class="block text-m font-medium text-gray-700">Địa chỉ:</label>
+                    <input id="address" type="text" value="Việt Nam" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- Email -->
+                <div class="col-span-1 md:col-span-2 flex items-center">
+                    <div class="w-full">
+                        <label for="email" class="block text-m font-medium text-gray-700">Email:</label>
+                        <input id="email" type="email" value="{{user.email}}" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <button id="btn-change-email" class="ml-4 bg-red-500 text-white rounded hover:bg-red-600">Đổi Email liên kết</button>
+                </div>
+                {{!-- Đổi email --}}
+                <div id="change-email" class="hidden col-span-1 md:col-span-2">
+                    <form action="/change-email" method="POST" 
+                    class="inline-flex items-center space-x-2">
+                        <input type="text" name="newEmail" placeholder="Nhập email mới" required 
+                            class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button 
+                            type="submit" 
+                            class="bg-blue-500 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Xác nhận
+                        </button>
+                    </form>
+                </div>
+                <!-- Số điện thoại -->
+                <div class="col-span-1 md:col-span-2 flex items-center">
+                    <div class="w-full">
+                        <label for="phone" class="block text-m font-medium text-gray-700">Số điện thoại:</label>
+                        <input id="phone" type="text" value="0123456789" readonly class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center mt-10">
+                <form action="/logout" method="post">
+                    <input type="submit" class="px-8 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition duration-200" value="Đăng Xuất">
+                </form>
+            </div>
+        </div>
+
+
+        <footer class="bg-white text-gray-800 py-8">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Information -->
+                <a href="/user">
+                    <h2 class="text-4xl font-bold text-orange-500">BKBOOKS</h2>
+                    <p>Công ti Cổ phần sách BKBooks</p>
+                </a>
+                <!-- Services Section -->
+                <div>
+                    <h3 class="font-semibold">DỊCH VỤ</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Điều khoản dịch vụ</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Giới thiệu BKBooks</a></li>
+                    </ul>
+                </div>
+                <!-- Support Section -->
+                <div>
+                    <h3 class="font-semibold">HỖ TRỢ</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Chính sách mượn sách</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Đổi trả sách</a></li>
+                    </ul>
+                </div>
+                <!-- Account Management Section -->
+                <div>
+                    <h3 class="font-semibold">QUẢN LÝ TÀI KHOẢN</h3>
+                    <ul class="mt-2">
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Lịch sử mượn sách</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-gray-800">Xem thông tin tài khoản</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Information Row -->
+            <div class="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-1"></div> <!-- Empty Column -->
+                <div class="flex items-center">
+                    <p class="text-gray-600"> 
+                        <i class="fa-solid fa-location-dot"></i>
+                        Địa chỉ: 268 Lý Thường Kiệt, Phường 14, Quận 10, TP. HCM
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <p class="text-gray-600">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email: abcdef@hcmut.edu.vn
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <p class="text-gray-600">
+                        <i class="fa-solid fa-phone"></i>
+                        Phone: 0123456789
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.querySelectorAll("#btn-change-password").forEach(button => {
+            button.addEventListener("click", function() {
+                const timestamp = button.id.split('_')[2];
+                const form = document.getElementById("change-password");
+                form.classList.toggle('hidden');
+            });
+        });
+        document.querySelectorAll("#btn-change-email").forEach(button => {
+            button.addEventListener("click", function() {
+                const timestamp = button.id.split('_')[2];
+                const form = document.getElementById("change-email");
+                form.classList.toggle('hidden');
+            });
+        });
+        document.querySelectorAll("#btn-change-avatar").forEach(button => {
+            button.addEventListener("click", function() {
+                const timestamp = button.id.split('_')[2];
+                const form = document.getElementById("change-avatar");
+                form.classList.toggle('hidden');
+            });
+        });
+
+    </script>
+</body>
+</html>
+
+{{!-- This place is used to code header --}}
+<!-- Header -->
+
